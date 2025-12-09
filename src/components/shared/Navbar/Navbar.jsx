@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
+import useAuth from "../../../hooks/useAuth";
 
-export default function Navbar({ isLoggedIn = false, user = {} }) {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const {user, logOut} = useAuth()
 
   return (
     <nav className="w-full fixed top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-200 shadow-sm">
@@ -20,13 +22,13 @@ export default function Navbar({ isLoggedIn = false, user = {} }) {
           <Link to="/clubs" className="hover:text-indigo-600">Clubs</Link>
           <Link to="/events" className="hover:text-indigo-600">Events</Link>
 
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <Link to="/login" className="hover:text-indigo-600">
                 Login
               </Link>
               <Link
-                to="/register"
+                to="/signup"
                 className="px-4 py-2 btn-club  text-white rounded-xl  transition"
               >
                 Register
@@ -48,7 +50,7 @@ export default function Navbar({ isLoggedIn = false, user = {} }) {
                 <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
                   Dashboard
                 </Link>
-                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-lg">
+                <button onClick={logOut} className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-lg">
                   Logout
                 </button>
               </div>
@@ -69,11 +71,11 @@ export default function Navbar({ isLoggedIn = false, user = {} }) {
           <Link to="/clubs" className="hover:text-indigo-600">Clubs</Link>
           <Link to="/events" className="hover:text-indigo-600">Events</Link>
 
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <Link to="/login" className="hover:text-indigo-600">Login</Link>
               <Link
-                to="/register"
+                to="/signup"
                 className="px-4 py-2 btn-club text-white rounded-xl transition w-fit"
               >
                 Register
