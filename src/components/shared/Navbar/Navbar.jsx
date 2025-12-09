@@ -27,7 +27,7 @@ export default function Navbar({ isLoggedIn = false, user = {} }) {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
+                className="px-4 py-2 btn-club  text-white rounded-xl  transition"
               >
                 Register
               </Link>
@@ -74,7 +74,7 @@ export default function Navbar({ isLoggedIn = false, user = {} }) {
               <Link to="/login" className="hover:text-indigo-600">Login</Link>
               <Link
                 to="/register"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition w-fit"
+                className="px-4 py-2 btn-club text-white rounded-xl transition w-fit"
               >
                 Register
               </Link>
