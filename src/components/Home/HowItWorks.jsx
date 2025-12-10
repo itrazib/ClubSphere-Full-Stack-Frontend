@@ -33,13 +33,13 @@ export default function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition"
+              className="p-6 bg-[#252f3d] rounded-2xl shadow-md hover:shadow-lg transition"
             >
               <h3 className="text-5xl font-extrabold text-blue-500 mb-4">
                 {step.number}
               </h3>
-              <h4 className="text-xl text-black font-semibold mb-2">{step.title}</h4>
-              <p className="text-black">{step.desc}</p>
+              <h4 className="text-xl text-white font-semibold mb-2">{step.title}</h4>
+              <p className="text-white">{step.desc}</p>
             </div>
           ))}
         </div>

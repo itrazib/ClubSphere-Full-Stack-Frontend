@@ -16,6 +16,9 @@ import EventRegistrations from "../components/ClubManager/EventRegistrations";
 import ManageClubs from "../components/Dashboard/Admin/ManageClubs";
 import ViewPayments from "../components/Dashboard/Admin/ViewPayments";
 import Clubs from "../components/Club/Clubs";
+import ClubDetails from "../components/Club/ClubDetails";
+import PaymentSuccess from "../components/PaymentSuccess";
+
 
 const router = createBrowserRouter([
     {
@@ -39,6 +42,14 @@ const router = createBrowserRouter([
             {
                 path:'/clubs',
                 element:<Clubs></Clubs>
+            },
+            {
+                path:'/clubs/:id',
+                element:<ClubDetails></ClubDetails>
+            },
+            {
+                path:"/payment-success",
+                element:<PaymentSuccess></PaymentSuccess>
             }
         ]
 
