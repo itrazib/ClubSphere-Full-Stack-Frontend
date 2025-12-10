@@ -37,7 +37,7 @@ export default function Navbar() {
           ) : (
             <div className="relative group cursor-pointer">
               <img
-                src={user.avatar || "https://i.ibb.co/4pDNDK1/avatar.png"}
+                src={user.photoURL || "https://i.ibb.co/4pDNDK1/avatar.png"}
                 className="w-10 h-10 rounded-full border"
               />
 

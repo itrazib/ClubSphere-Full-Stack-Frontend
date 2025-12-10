@@ -2,7 +2,8 @@
 import useRole from '../../../hooks/useRole'
 import Loading from '../../Loader/Loading'
 import AdminStatistics from '../Statistics/AdminStatistics'
-import ClubManagerStatistics from '../Statistics/ClubManagerStatistics'
+import ManagerOverview from '../Statistics/ManagerOverview'
+
 import MemberStatistics from '../Statistics/MemberStatistics'
 const Statistics = () => {
   const [role, isRoleLoading] = useRole()
@@ -10,7 +11,7 @@ const Statistics = () => {
   return (
     <div>
       {role === 'member' && <MemberStatistics />}
-      {role === 'clubManager' && <ClubManagerStatistics />}
+      {role === 'clubManager' && <ManagerOverview />}
       {role === 'admin' && <AdminStatistics />}
     </div>
   )

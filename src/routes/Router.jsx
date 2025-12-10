@@ -9,6 +9,10 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
 import Statistics from "../components/Dashboard/Common/Statistics";
 import ManageUsers from "../components/Dashboard/Admin/ManageUsers";
+import MyClubs from "../components/ClubManager/MyClubs";
+import ClubMembers from "../components/ClubManager/ClubMembers";
+import EventsManagement from "../components/ClubManager/EventsManagement";
+import EventRegistrations from "../components/ClubManager/EventRegistrations";
 
 const router = createBrowserRouter([
     {
@@ -44,6 +48,22 @@ const router = createBrowserRouter([
             {
                 path:"manage-users",
                 element:<PrivateRoute><ManageUsers></ManageUsers></PrivateRoute>
+            },
+            {
+                path:"my-clubs",
+                element:<PrivateRoute><MyClubs></MyClubs></PrivateRoute>
+            },
+            {
+                path:"club-members",
+                element:<PrivateRoute><ClubMembers></ClubMembers></PrivateRoute>
+            },
+            {
+                path:"event-management",
+                element:<PrivateRoute><EventsManagement></EventsManagement></PrivateRoute>
+            },
+            {
+                path:"event-registrations",
+                element:<PrivateRoute><EventRegistrations></EventRegistrations></PrivateRoute>
             }
         ]
     }

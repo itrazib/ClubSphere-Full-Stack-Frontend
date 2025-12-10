@@ -79,8 +79,8 @@ const Sidebar = () => {
                 address='/dashboard'
               />
               {/* Role-Based Menu */}
-              {role === 'customer' && <CustomerMenu />}
-              {role === 'seller' && <SellerMenu />}
+              {role === 'member' && <CustomerMenu />}
+              {role === 'clubManager' && <SellerMenu />}
               {role === 'admin' && <AdminMenu />}
             </nav>
           </div>
