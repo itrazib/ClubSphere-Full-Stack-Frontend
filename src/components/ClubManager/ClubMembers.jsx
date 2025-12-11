@@ -1,54 +1,83 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function ClubMembers() {
-  const [clubs, setClubs] = useState([]);
+  const axiosSecure = useAxiosSecure();
   const [selectedClub, setSelectedClub] = useState(null);
   const [members, setMembers] = useState([]);
-  const [confirmModal, setConfirmModal] = useState({ open: false, member: null });
+  const [memberCounts, setMemberCounts] = useState({});
+  const [confirmModal, setConfirmModal] = useState({
+    open: false,
+    member: null,
+  });
 
-  // Fetch clubs
+  // Load managed clubs
+  const { data: clubs = [] } = useQuery({
+    queryKey: ["managedClubs"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/clubs/approved");
+      return res.data;
+    },
+  });
+
+  // Load member count for each club
   useEffect(() => {
-    // Later replace with API
-    setClubs([
-      { _id: "1", name: "Tech Innovators", members: 12 },
-      { _id: "2", name: "Sports Club", members: 18 },
-    ]);
-  }, []);
+    const loadCounts = async () => {
+      let newCounts = {};
+      for (const club of clubs) {
+        try {
+          const res = await axiosSecure.get(`/memberships/count/${club._id}`);
+          newCounts[club._id] = res.data.count;
+        } catch (err) {
+          newCounts[club._id] = 0;
+        }
+      }
+      setMemberCounts(newCounts);
+    };
 
-  // Fetch members of a club
-  const loadMembers = (clubId) => {
-    // Later replace with API
+    if (clubs.length > 0) loadCounts();
+  }, [clubs]);
+
+  // Load members for selected club
+  const loadMembers = async (clubId) => {
     setSelectedClub(clubId);
-    setMembers([
-      {
-        _id: "m1",
-        name: "John Doe",
-        email: "john@example.com",
-        status: "active",
-        joinDate: "2024-01-10",
-      },
-      {
-        _id: "m2",
-        name: "Emily Carter",
-        email: "emily@example.com",
-        status: "active",
-        joinDate: "2024-02-14",
-      },
-    ]);
+    try {
+      const res = await axiosSecure.get(`/memberships/${clubId}`);
+      setMembers(res.data);
+    } catch (error) {
+      console.error("Error loading members:", error);
+    }
   };
 
-  const handleExpire = () => {
-    const updated = members.map((m) =>
-      m._id === confirmModal.member._id ? { ...m, status: "expired" } : m
-    );
-    setMembers(updated);
-    setConfirmModal({ open: false, member: null });
+  // Expire a member
+  const handleExpire = async () => {
+    try {
+      await axiosSecure.patch(
+        `/memberships/${confirmModal.member._id}/expire`,
+        { status: "expired" }
+      );
+
+      const updated = members.map((m) =>
+        m._id === confirmModal.member._id ? { ...m, status: "expired" } : m
+      );
+
+      setMembers(updated);
+      setConfirmModal({ open: false, member: null });
+
+      // update the card count also
+      setMemberCounts((prev) => ({
+        ...prev,
+        [selectedClub]: prev[selectedClub] - 1,
+      }));
+    } catch (error) {
+      console.error("Error expiring member:", error);
+    }
   };
 
   return (
     <div className="p-6 w-full mx-auto">
-      
       {/* Clubs Card List */}
       <h1 className="text-2xl font-bold mb-4">My Clubs</h1>
 
@@ -63,7 +92,10 @@ export default function ClubMembers() {
           >
             <h2 className="text-xl font-semibold">{club.name}</h2>
             <p className="text-gray-600 mt-1">
-              Total Members: <span className="font-bold">{club.members}</span>
+              Total Members:{" "}
+              <span className="font-bold">
+                {memberCounts[club._id] ?? 0}
+              </span>
             </p>
           </motion.div>
         ))}
@@ -94,7 +126,7 @@ export default function ClubMembers() {
                 {members.map((member) => (
                   <tr key={member._id} className="border-b hover:bg-gray-50">
                     <td className="p-3 border">{member.name}</td>
-                    <td className="p-3 border">{member.email}</td>
+                    <td className="p-3 border">{member.memberEmail}</td>
                     <td
                       className={`p-3 border font-semibold ${
                         member.status === "expired"
@@ -104,7 +136,7 @@ export default function ClubMembers() {
                     >
                       {member.status}
                     </td>
-                    <td className="p-3 border">{member.joinDate}</td>
+                    <td className="p-3 border">{member.joinedAt}</td>
                     <td className="p-3 border text-center">
                       {member.status !== "expired" && (
                         <button
@@ -146,7 +178,9 @@ export default function ClubMembers() {
 
               <div className="mt-4 flex justify-end gap-3">
                 <button
-                  onClick={() => setConfirmModal({ open: false, member: null })}
+                  onClick={() =>
+                    setConfirmModal({ open: false, member: null })
+                  }
                   className="px-3 py-1 border rounded-lg hover:bg-gray-100"
                 >
                   Cancel
