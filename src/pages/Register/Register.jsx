@@ -28,22 +28,16 @@ const Register = () => {
     // formData.append('image', imageFile)
 
     try {
-      // const { data } = await axios.post(
-      //   `https://api.imgbb.com/1/upload?key=${
-      //     import.meta.env.VITE_IMGBB_API_KEY
-      //   }`,
-      //   formData
-      // )
+    
       const imageURL = await imageUpload(imageFile)
-      // const cloudinaryImageUrl = await imageUploadCloudinary(imageFile)
-      // console.log('Cloudinary Response ----->', cloudinaryImageUrl)
+     
 
       //1. User Registration
       const result = await createUser(email, password)
 
       await saveOrUpdateUser({ name, email, image: imageURL })
 
-      // 2. Generate image url from selected file
+      
 
       //3. Save username & profile photo
       await updateUserProfile(name, imageURL)
@@ -57,33 +51,6 @@ const Register = () => {
       toast.error(err?.message)
     }
   }
-  // form submit handler
-  // const handleSubmit = async event => {
-  //   event.preventDefault()
-  //   const form = event.target
-  //   const name = form.name.value
-  //   const email = form.email.value
-  //   const password = form.password.value
-
-  //   try {
-  //     //1. User Registration
-  //     const result = await createUser(email, password)
-
-  //     // 2. Generate image url from selected file
-
-  //     //3. Save username & profile photo
-  //     await updateUserProfile(
-  //       name,
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKUMU3XIX-JSUB80Gj_bYIWfYudpibgdwZE1xqmAGxHASgdvCZZ=s96-c'
-  //     )
-
-  //     navigate(from, { replace: true })
-  //     toast.success('Signup Successful')
-  //   } catch (err) {
-  //     console.log(err)
-  //     toast.error(err?.message)
-  //   }
-  // }
 
   // Handle Google Signin
   const handleGoogleSignIn = async () => {

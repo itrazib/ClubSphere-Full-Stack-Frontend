@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { imageUpload } from "../../utils";
+import { Description } from "@headlessui/react";
 
 export default function ManageEvents() {
   const [selectedClub, setSelectedClub] = useState(null);
@@ -85,6 +87,7 @@ export default function ManageEvents() {
   // OPEN MODAL (CREATE/UPDATE)
   // ----------------------------------------------------------
   const openEventModal = (type, event = null) => {
+    console.log(event)
     setModal({ open: true, type, event });
     reset(event || {});
   };
@@ -92,11 +95,18 @@ export default function ManageEvents() {
   // ----------------------------------------------------------
   // FORM SUBMIT HANDLER
   // ----------------------------------------------------------
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
+    const {title, description, image, date,location, isPaid, eventFee,maxAttendees,clubId,createdAt,updateAt} = data
+
+    const imageFile = image[0]
+
+    const imageUrl = await imageUpload(imageFile)
+    console.log(imageUrl)
+    console.log(data)
     if (!selectedClub) return alert("Select a club first!");
 
     if (modal.type === "create") {
-      createEvent.mutate(data);
+      createEvent.mutate({title, description, image:imageUrl, date,location, isPaid, eventFee,maxAttendees,clubId,createdAt,updateAt});
     } else {
       updateEvent.mutate({ id: modal.event._id, data });
     }
@@ -155,10 +165,7 @@ export default function ManageEvents() {
 
                 <tbody>
                   {events.map((event) => (
-                    <tr
-                      key={event._id}
-                      className="border-b hover:bg-gray-50"
-                    >
+                    <tr key={event._id} className="border-b hover:bg-gray-50">
                       <td className="p-3 border">{event.title}</td>
                       <td className="p-3 border">{event.date}</td>
                       <td className="p-3 border">{event.location}</td>
@@ -215,6 +222,34 @@ export default function ManageEvents() {
                   placeholder="Description"
                   className="w-full p-2 border rounded-lg"
                 ></textarea>
+
+                <div>
+                  <label
+                    htmlFor="image"
+                    className="block mb-2 text-sm font-medium text-gray-700"
+                  >
+                    Profile Image
+                  </label>
+                  <input
+                    name="image"
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    className="block w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-md file:border-0
+      file:text-sm file:font-semibold
+      file:bg-lime-50 file:text-lime-700
+      hover:file:bg-lime-100
+      bg-gray-100 border border-dashed border-lime-300 rounded-md cursor-pointer
+      focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-lime-400
+      py-2"
+                    {...register("image")}
+                  />
+                  <p className="mt-1 text-xs text-gray-400">
+                    PNG, JPG or JPEG (max 2MB)
+                  </p>
+                </div>
 
                 <input
                   type="date"
@@ -285,18 +320,14 @@ export default function ManageEvents() {
 
               <div className="flex justify-end gap-3">
                 <button
-                  onClick={() =>
-                    setConfirmDelete({ open: false, event: null })
-                  }
+                  onClick={() => setConfirmDelete({ open: false, event: null })}
                   className="px-3 py-1 border rounded-lg hover:bg-gray-100"
                 >
                   Cancel
                 </button>
 
                 <button
-                  onClick={() =>
-                    deleteEvent.mutate(confirmDelete.event._id)
-                  }
+                  onClick={() => deleteEvent.mutate(confirmDelete.event._id)}
                   className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Yes, Delete
