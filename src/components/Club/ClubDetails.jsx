@@ -204,8 +204,6 @@ export default function ClubDetails({ onBack }) {
             <span className="text-purple-300 font-semibold">club member</span>{" "}
             to view events.
           </p>
-        ) : eventsLoading ? (
-          <Loading />
         ) : events?.length === 0 ? (
           <p className="text-gray-400 text-lg">
             No events available for this club.

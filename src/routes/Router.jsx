@@ -58,7 +58,7 @@ const router = createBrowserRouter([
                 element:<PaymentSuccess></PaymentSuccess>
             },
             {
-                path:'events',
+                path:'/events',
                 element:<Events></Events>
             },
             {
@@ -79,48 +79,48 @@ const router = createBrowserRouter([
             },
             {
                 path:"manage-users",
-                element:<PrivateRoute><ManageUsers></ManageUsers></PrivateRoute>
+                element:<ManageUsers></ManageUsers>
             },
             {
                 path:"my-clubs",
-                element:<PrivateRoute><MyClubs></MyClubs></PrivateRoute>
+                element:<MyClubs></MyClubs>
             },
             {
                 path:"club-members",
-                element:<PrivateRoute><ClubMembers></ClubMembers></PrivateRoute>
+                element:<ClubMembers></ClubMembers>
             },
             {
                 path:"event-management",
-                element:<PrivateRoute><EventsManagement></EventsManagement></PrivateRoute>
+                element:<EventsManagement></EventsManagement>
             },
             {
                 path:"event-registrations",
-                element:<PrivateRoute><EventRegistrations></EventRegistrations></PrivateRoute>
+                element:<EventRegistrations></EventRegistrations>
             },
             // for admin
             {
                 path:"manage-clubs",
-                element:<PrivateRoute><ManageClubs></ManageClubs></PrivateRoute>
+                element:<ManageClubs></ManageClubs>
             },
             {
                 path:"payments",
-                element:<PrivateRoute><ViewPayments></ViewPayments></PrivateRoute>
+                element:<ViewPayments></ViewPayments>
             },
             {
                 path:'profile',
-                element:<PrivateRoute><Profile></Profile></PrivateRoute>
+                element:<Profile></Profile>
             },
             {
                 path:"member-clubs",
-                element:<PrivateRoute><MemberClubs></MemberClubs></PrivateRoute>
+                element:<MemberClubs></MemberClubs>
             },
             {
                 path:"member-events",
-                element:<PrivateRoute><MyEvents></MyEvents></PrivateRoute>
+                element:<MyEvents></MyEvents>
             },
             {
                 path:"member-payments",
-                element:<PrivateRoute><PaymentHistory></PaymentHistory></PrivateRoute>
+                element:<PaymentHistory></PaymentHistory>
             }
         ]
     }
