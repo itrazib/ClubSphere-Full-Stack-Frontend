@@ -1,5 +1,5 @@
 import { BsFillHouseAddFill } from 'react-icons/bs'
-import { MdEventNote, MdHomeWork, MdOutlineManageHistory } from 'react-icons/md'
+import { MdAppRegistration, MdEventNote, MdHomeWork, MdManageAccounts, MdOutlineManageHistory } from 'react-icons/md'
 import MenuItem from './MenuItem'
 import { Menu } from 'lucide-react'
 const SellerMenu = () => {
@@ -17,19 +17,15 @@ const SellerMenu = () => {
         address='club-members'
       />
       <MenuItem
-       icon={MdEventNote}
+       icon={MdManageAccounts}
        label='Event Management'
        address='event-management'
       />
-      <MenuItem icon={MdHomeWork} 
+      <MenuItem icon={MdAppRegistration} 
       label='Event Registrations'
        address='event-registrations' 
        />
-      <MenuItem
-        icon={MdOutlineManageHistory}
-        label='Manage Orders'
-        address='manage-orders'
-      />
+      
     </>
   )
 }

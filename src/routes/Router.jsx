@@ -20,6 +20,7 @@ import ClubDetails from "../components/Club/ClubDetails";
 import PaymentSuccess from "../components/PaymentSuccess";
 import Events from "../components/Events/Events";
 import EventDetails from "../components/Events/EventDetails";
+import Profile from "../components/Profile/Profile";
 
 
 const router = createBrowserRouter([
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
             {
                 path:"payments",
                 element:<PrivateRoute><ViewPayments></ViewPayments></PrivateRoute>
+            },
+            {
+                path:'profile',
+                element:<PrivateRoute><Profile></Profile></PrivateRoute>
             }
         ]
     }

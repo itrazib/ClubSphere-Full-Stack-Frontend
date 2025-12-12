@@ -1,112 +1,217 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
-import useAuth from '../../../hooks/useAuth'
-// import logo from '../../../assets/images/logo-flat.png'
-// Icons
-import { GrLogout } from 'react-icons/gr'
-import { FcSettings } from 'react-icons/fc'
-import { AiOutlineBars } from 'react-icons/ai'
-import { BsGraphUp } from 'react-icons/bs'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router";
+import MenuItem from "./Menu/MenuItem";
+import AdminMenu from "./Menu/AdminMenu";
+import SellerMenu from "./Menu/ClubManagerItem";
+import CustomerMenu from "./Menu/MemberMenu";
+import useRole from "../../../hooks/useRole";
+import useAuth from "../../../hooks/useAuth";
+import { FcStatistics } from "react-icons/fc";
+import { CgProfile } from "react-icons/cg";
 
-// User Menu
-import MenuItem from './Menu/MenuItem'
-import AdminMenu from './Menu/AdminMenu'
-import SellerMenu from './Menu/ClubManagerItem'
-import CustomerMenu from './Menu/MemberMenu'
-import useRole from '../../../hooks/useRole'
-import Loading from '../../Loader/Loading'
-// import LoadingSpinner from '../../Shared/LoadingSpinner'
+/*
+  This Sidebar provides:
+  - fixed sidebar on desktop (visible)
+  - slide-in sidebar on mobile (toggle with hamburger)
+  - overlay to click outside and close
+  - minimal inline styles (JSX-only)
+*/
 
-const Sidebar = () => {
-  const { logOut } = useAuth()
-  const [isActive, setActive] = useState(false)
-  const [role, isRoleLoading] = useRole()
+export default function Sidebar() {
+  const [open, setOpen] = useState(false); // mobile open state
+  const [role, isRoleLoading] = useRole();
+  const { logOut } = useAuth();
 
-  // Sidebar Responsive Handler
-  const handleToggle = () => {
-    setActive(!isActive)
-  }
+  // close mobile menu on viewport resize >= 768
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth >= 768) setOpen(false);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-  if (isRoleLoading) return <Loading />
+  if (isRoleLoading) return null;
+
+  // basic sizes: sidebarWidth same used in layout/topbar spacing
+  const sidebarWidth = 260;
 
   return (
     <>
-      {/* Small Screen Navbar, only visible till md breakpoint */}
-      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden'>
-        <div>
-          <div className='block cursor-pointer p-4 font-bold'>
-            {/* <Link to='/'>
-              <img src={logo} alt='logo' width='100' height='100' />
-            </Link> */}
-            <Link to='/'>ClubSphere</Link>
-          </div>
-        </div>
-
-        <button
-          onClick={handleToggle}
-          className='mobile-menu-button p-4 focus:outline-none focus:bg-gray-200'
-        >
-          <AiOutlineBars className='h-5 w-5' />
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <div
-        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+      {/* Desktop fixed sidebar */}
+      <aside
+        style={{
+          width: sidebarWidth,
+          minWidth: sidebarWidth,
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          padding: 20,
+          background: "#ffffff",
+          boxShadow: "2px 0 6px rgba(0,0,0,0.06)",
+          display: window.innerWidth >= 768 ? "block" : "none",
+          zIndex: 20
+        }}
       >
-        <div className='flex flex-col h-full'>
-          {/* Top Content */}
-          <div>
-            {/* Logo */}
-            <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-lime-100 mx-auto'>
-              {/* <Link to='/'>
-                <img src={logo} alt='logo' width='100' height='100' />
-              </Link> */}
-               <Link to='/'>ClubSphere</Link>
-            </div>
-          </div>
+        <div style={{ marginBottom: 22 }}>
+          <Link to="/" style={{ textDecoration: "none", color: "#6b21a8", fontWeight: 700, fontSize: 20 }}>
+            ClubSphere
+          </Link>
+        </div>
 
-          {/* Middle Content */}
-          <div className='flex flex-col justify-between flex-1 mt-6'>
-            {/*  Menu Items */}
-            <nav>
-              {/* Common Menu */}
-              <MenuItem
-                icon={BsGraphUp}
-                label='Statistics'
-                address='/dashboard'
-              />
-              {/* Role-Based Menu */}
-              {role === 'member' && <CustomerMenu />}
-              {role === 'clubManager' && <SellerMenu />}
-              {role === 'admin' && <AdminMenu />}
-            </nav>
-          </div>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <MenuItem label="Statistics" icon={FcStatistics} address="/dashboard" />
+          {role === "member" && <CustomerMenu />}
+          {role === "clubManager" && <SellerMenu />}
+          {role === "admin" && <AdminMenu />}
+        </nav>
 
-          {/* Bottom Content */}
-          <div>
-            <hr />
+        <div style={{ marginTop: "auto" }}>
+          <MenuItem label="Profile" icon={CgProfile} address="/dashboard/profile" />
+          <button
+            onClick={logOut}
+             className="btn-club"
+            style={{
+              width: "100%",
+              marginTop: 12,
+              padding: "10px 12px",
+             
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              cursor: "pointer"
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      </aside>
 
-            <MenuItem
-              icon={FcSettings}
-              label='Profile'
-              address='/dashboard/profile'
-            />
-            <button
-              onClick={logOut}
-              className='flex cursor-pointer w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'
-            >
-              <GrLogout className='w-5 h-5' />
+      {/* Mobile: Topbar + Hamburger integrated into Topbar (we will render a simplified top header here) */}
+      <div
+        style={{
+          display: window.innerWidth < 768 ? "flex" : "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 56,
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 12px",
+          background: "#fff",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+          zIndex: 40
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+           
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              border: "none",
+              background: "#f3f3f3",
+              cursor: "pointer"
+            }}
+          >
+            ☰
+          </button>
+          <Link to="/" style={{ textDecoration: "none", color: "#6b21a8", fontWeight: 700 }}>
+            ClubSphere
+          </Link>
+        </div>
 
-              <span className='mx-4 font-medium'>Logout</span>
-            </button>
-          </div>
+        <div />
+      </div>
+
+      {/* Mobile sliding sidebar */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: open ? 0 : -sidebarWidth,
+          width: sidebarWidth,
+          height: "100vh",
+          background: "#ffffff",
+          boxShadow: "2px 0 8px rgba(0,0,0,0.12)",
+          transition: "left 220ms ease",
+          zIndex: 50,
+          padding: 20,
+          display: window.innerWidth < 768 ? "block" : "none"
+        }}
+        role="dialog"
+        aria-hidden={!open}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ fontWeight: 700, color: "#6b21a8" }}>Menu</div>
+          <button
+            onClick={() => setOpen(false)}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 8,
+              border: "none",
+              background: "#f3f3f3",
+              cursor: "pointer"
+            }}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
+        </div>
+
+        <nav style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <MenuItem label="Statistics" address="/dashboard" />
+          {role === "member" && <CustomerMenu />}
+          {role === "clubManager" && <SellerMenu />}
+          {role === "admin" && <AdminMenu />}
+        </nav>
+
+        <div style={{ marginTop: "auto" }}>
+          <MenuItem label="Profile" icon={CgProfile} address="/dashboard/profile" />
+          <button
+            onClick={() => {
+              setOpen(false);
+              logOut();
+            }}
+             className="btn-club"
+            style={{
+              width: "100%",
+              marginTop: 12,
+              padding: "10px 12px",
+             
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              cursor: "pointer"
+            }}
+          >
+            Logout
+          </button>
         </div>
       </div>
-    </>
-  )
-}
 
-export default Sidebar
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.35)",
+            zIndex: 45,
+            display: window.innerWidth < 768 ? "block" : "none"
+          }}
+        />
+      )}
+
+      {/* spacer for desktop so main content leaves space for fixed sidebar */}
+      <div style={{ width: window.innerWidth >= 768 ? sidebarWidth : 0 }} />
+    </>
+  );
+}
