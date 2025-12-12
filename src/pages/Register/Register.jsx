@@ -54,7 +54,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-lime-100 p-4">
+    <div className="flex items-center justify-center min-h-screen  p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -129,7 +129,7 @@ export default function Register() {
 
           {/* Submit */}
           <button
-            className="w-full bg-lime-600 hover:bg-lime-700 text-white py-3 rounded-xl font-semibold transition"
+            className="w-full btn-club text-white py-3 rounded-xl font-semibold transition"
             type="submit"
           >
             {loading ? (
@@ -159,7 +159,7 @@ export default function Register() {
         {/* Login Link */}
         <p className="mt-6 text-center text-gray-700 text-sm">
           Already have an account?{" "}
-          <Link className="text-lime-700 font-semibold hover:underline" to="/login">
+          <Link className="text-blue-500 font-semibold hover:underline" to="/login">
             Login
           </Link>
         </p>

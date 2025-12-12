@@ -21,45 +21,60 @@ export default function ClubDetails({ onBack }) {
   const { user } = useAuth();
   const [paymentOpen, setPaymentOpen] = useState(false);
 
-  // Fetch Specific Club
-  const { data: club, isLoading } = useQuery({
-    queryKey: ["clubDetails", id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/clubs/${id}`);
-      return res.data;
-    },
-  });
-  const { data: count } = useQuery({
-    queryKey: ["memberCount", id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/memberships/count/${id}`);
-      console.log(res.data)
-      return res.data;
-    },
-  });
+  // // Fetch Specific Club
+  // const { data: club, isLoading } = useQuery({
+  //   queryKey: ["clubDetails", id],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/clubs/${id}`);
+  //     return res.data;
+  //   },
+  // });
+  // const { data: count } = useQuery({
+  //   queryKey: ["memberCount", id],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/memberships/count/${id}`);
+  //     console.log(res.data)
+  //     return res.data;
+  //   },
+  // });
 
-  // Check Membership Status
-  const { data: isMember } = useQuery({
-    queryKey: ["isMember", user?.email, id],
+  // // Check Membership Status
+  // const { data: isMember } = useQuery({
+  //   queryKey: ["isMember", user?.email, id],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(
+  //       `/is-member?memberEmail=${user.email}&clubId=${id}`
+  //     );
+  //     return res.data;
+  //   },
+  //   enabled: !!user?.email,
+  // });
+
+  // const { data: events, isLoading: eventsLoading } = useQuery({
+  //   queryKey: ["clubEvents", id],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/events/${id}`);
+  //     return res.data;
+  //   },
+  //   enabled: isMember === "active", // 👈 Only fetch if member
+  // });
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["clubPage", id, user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/is-member?memberEmail=${user.email}&clubId=${id}`
+        `/club-page/${id}?email=${user?.email}`
       );
+      console.log(res.data)
       return res.data;
     },
     enabled: !!user?.email,
   });
 
-
-
-  const { data: events, isLoading: eventsLoading } = useQuery({
-    queryKey: ["clubEvents", id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/events/${id}`);
-      return res.data;
-    },
-    enabled: isMember === "active", // 👈 Only fetch if member
-  });
+  const club = data?.club;
+  const count = data?.memberCount;
+  const isMember = data?.isMember;
+  const events = data?.events;
 
   if (isLoading) return <Loading />;
 
@@ -68,15 +83,15 @@ export default function ClubDetails({ onBack }) {
   const fee = club.membershipFee;
 
   return (
-    <div className="min-h-screen relative z-20 mt-20 text-white pb-20">
+    <div className="min-h-screen relative z-20 mt-20 text-black pb-20">
       {/* Back Button */}
       <div className="p-4 max-w-7xl mx-auto">
-        <button
+       <Link to="/clubs"> <button
           onClick={onBack}
-          className="flex items-center gap-2 text-gray-400 hover:text-white"
+          className="flex items-center gap-2 text-black btn-club p-2 rounded-xl hover:text-white"
         >
           <ArrowLeft size={20} /> Back
-        </button>
+        </button></Link>
       </div>
 
       {/* Banner */}
@@ -117,7 +132,7 @@ export default function ClubDetails({ onBack }) {
         ) : (
           <button
             onClick={() => setPaymentOpen(true)}
-            className="px-10 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg hover:opacity-90 transition text-lg font-semibold"
+            className="px-10 py-3 btn-club rounded-xl shadow-lg hover:opacity-90 transition text-lg font-semibold"
           >
             {fee === 0 ? "Join for Free" : `Join • $${fee}`}
           </button>
@@ -140,15 +155,15 @@ export default function ClubDetails({ onBack }) {
           className="md:col-span-2 p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg"
         >
           <h2 className="text-2xl font-semibold mb-3">About the Club</h2>
-          <p className="text-gray-300 leading-relaxed">{club.description}</p>
+          <p className="text-black leading-relaxed">{club.description}</p>
         </motion.div>
 
         <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
           <h3 className="text-xl font-semibold flex items-center gap-2 mb-3">
             <Users size={20} /> Members
           </h3>
-          <p className="text-4xl font-bold text-purple-300">
-            {count.count || 0}
+          <p className="text-4xl font-bold text-purple-700">
+            {count || 0}
           </p>
         </div>
       </div>
@@ -156,35 +171,35 @@ export default function ClubDetails({ onBack }) {
       {/* Location + Email + Fee */}
       <div className="max-w-7xl mx-auto px-4 mt-8 grid md:grid-cols-3 gap-6">
         <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
-          <h3 className="text-lg text-gray-300 mb-2 flex items-center gap-2">
+          <h3 className="text-lg text-black mb-2 flex items-center gap-2">
             <MapPin size={18} /> Location
           </h3>
-          <p className="text-white text-xl">{club.location}</p>
+          <p className="text-black text-xl">{club.location}</p>
         </div>
 
         <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
-          <h3 className="text-lg text-gray-300 mb-2 flex items-center gap-2">
+          <h3 className="text-lg text-black mb-2 flex items-center gap-2">
             <Mail size={18} /> Manager Email
           </h3>
-          <p className="text-white text-xl break-all">{club.managerEmail}</p>
+          <p className="text-black text-xl break-all">{club.managerEmail}</p>
         </div>
 
         <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
-          <h3 className="text-lg text-gray-300 mb-2">Membership Fee</h3>
-          <p className="text-white text-xl">{fee === 0 ? "Free" : `$${fee}`}</p>
+          <h3 className="text-lg text-black mb-2">Membership Fee</h3>
+          <p className="text-black text-xl">{fee === 0 ? "Free" : `$${fee}`}</p>
         </div>
       </div>
 
       {/* EVENTS SECTION */}
 
       <div className="max-w-7xl mx-auto px-4 mt-14">
-        <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-700 to-pink-300 bg-clip-text text-transparent">
           Club Events
         </h2>
 
         {/* If NOT Member */}
         {isMember !== "active" ? (
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-500 text-lg">
             ❗You must be a{" "}
             <span className="text-purple-300 font-semibold">club member</span>{" "}
             to view events.
