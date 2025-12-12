@@ -21,6 +21,7 @@ import PaymentSuccess from "../components/PaymentSuccess";
 import Events from "../components/Events/Events";
 import EventDetails from "../components/Events/EventDetails";
 import Profile from "../components/Profile/Profile";
+import MemberClubs from "../components/Member/MemberClubs";
 
 
 const router = createBrowserRouter([
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
             {
                 path:'profile',
                 element:<PrivateRoute><Profile></Profile></PrivateRoute>
+            },
+            {
+                path:"member-clubs",
+                element:<PrivateRoute><MemberClubs></MemberClubs></PrivateRoute>
             }
         ]
     }
