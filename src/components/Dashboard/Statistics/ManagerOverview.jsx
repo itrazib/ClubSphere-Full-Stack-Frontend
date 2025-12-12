@@ -1,27 +1,44 @@
 import React from "react";
 import { Users, Calendar, CreditCard, Grid } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+
+
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../Loader/Loading";
 
 export default function ManagerOverview() {
+  const axiosSecure = useAxiosSecure();
+
+  // ===== API Call =====
+  const { data, isLoading } = useQuery({
+    queryKey: ["managerOverview"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/manager/overview"); // Change API route
+      return res.data;
+    },
+  });
+  console.log(data)
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     show: (i) => ({
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: {
-        duration: 0.5,
-        delay: i * 0.1,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.5, delay: i * 0.1, ease: "easeOut" },
     }),
   };
 
+  // Show loader while fetching
+  if (isLoading) return <Loading />;
+
+  // API Values
   const stats = [
-    { label: "Clubs Managed", value: 4, icon: Grid },
-    { label: "Total Members", value: 128, icon: Users },
-    { label: "Events Created", value: 22, icon: Calendar },
-    { label: "Total Payments", value: "$4,520", icon: CreditCard },
+    { label: "Clubs Managed", value: data?.clubsManaged || 0, icon: Grid },
+    { label: "Total Members", value: data?.totalMembers || 0, icon: Users },
+    { label: "Events Created", value: data?.eventsCreated || 0, icon: Calendar },
+    { label: "Total Payments", value: `$${data?.totalPayments || 0}`, icon: CreditCard },
   ];
 
   return (
@@ -46,7 +63,8 @@ export default function ManagerOverview() {
               initial="hidden"
               animate="show"
               whileHover={{ scale: 1.03, y: -3 }}
-              className="p-5 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-lg hover:shadow-xl transition-all"
+              className="p-5 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 
+                         backdrop-blur-xl border border-white/20 shadow-lg hover:shadow-xl transition-all"
             >
               <div className="flex items-start gap-3">
                 <motion.div

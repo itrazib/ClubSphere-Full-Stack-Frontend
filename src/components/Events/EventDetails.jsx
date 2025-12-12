@@ -177,7 +177,7 @@ export default function EventDetails() {
             </button>
           )}
         {/* Not joined yet */}
-        {isMember === "active" && isJoined === "not" && !joinedLoading && (
+        {isMember === "active" && isJoined === undefined && !joinedLoading && (
           <button
             onClick={() => joinEventMutation.mutate()}
             disabled={joinEventMutation.isLoading}

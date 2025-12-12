@@ -100,6 +100,10 @@ export default function ClubDetails({ onBack }) {
           <button className="px-10 py-3 bg-green-600 rounded-xl text-lg font-semibold">
             ✔ Member
           </button>
+        ) : isMember === "expired" ? (
+          <button className="px-10 py-3 bg-green-600 rounded-xl text-lg font-semibold">
+            {fee === 0 ? "Join for Free" : `Join • $${fee}`}
+          </button>
         ) : (
           <button
             onClick={() => setPaymentOpen(true)}

@@ -3,13 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loading from "../../Loader/Loading";
+import { CreditCard, User, Layers, CalendarDays } from "lucide-react";
 
 export default function ViewPayments() {
   const axiosSecure = useAxiosSecure();
 
-  // ------------------------------
-  // FETCH PAYMENTS
-  // ------------------------------
   const { data: payments = [], isLoading } = useQuery({
     queryKey: ["payments"],
     queryFn: async () => {
@@ -22,64 +20,77 @@ export default function ViewPayments() {
 
   return (
     <div className="p-6 space-y-6 w-full">
-      {/* ---------- Page Title ---------- */}
+      {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl font-bold"
+        className="text-2xl font-bold text-white"
       >
-        Payments / Transactions
+        Payment Records
       </motion.h1>
 
-      {/* ---------- Payment Table ---------- */}
-      <div className="overflow-x-auto bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg">
-        <table className="w-full text-left">
-          <thead className="bg-white/20 text-gray-200">
-            <tr>
-              <th className="p-4">User Email</th>
-              <th className="p-4">Amount</th>
-              <th className="p-4">Type</th>
-              <th className="p-4">Club Name</th>
-              <th className="p-4">Date</th>
-            </tr>
-          </thead>
+      {/* Table Container */}
+      <div className="overflow-hidden border border-white/10 rounded-xl bg-[#141414] shadow-lg">
+        {/* Table Header */}
+        <div className="grid grid-cols-5 px-6 py-3 bg-[#1c1c1c] border-b border-white/10 text-gray-300 text-sm font-semibold uppercase">
+          <div className="flex items-center gap-2">
+            <User size={16} /> User
+          </div>
+          <div className="flex items-center gap-2">
+            <CreditCard size={16} /> Amount
+          </div>
+          <div className="flex items-center gap-2">
+            <Layers size={16} /> Type
+          </div>
+          <div>Club</div>
+          <div className="flex items-center gap-2">
+            <CalendarDays size={16} /> Date
+          </div>
+        </div>
 
-          <tbody>
-            {payments.map((payment, index) => (
-              <motion.tr
-                key={payment._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="border-b border-white/10 hover:bg-white/5"
-              >
-                <td className="p-4 font-medium">{payment.userEmail}</td>
+        {/* Table Rows */}
+        <div className="">
+          {payments.map((payment, index) => (
+            <motion.div
+              key={payment._id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.04 }}
+              className="grid grid-cols-5 px-6 py-4 border-b border-white/5 hover:bg-white/5 transition text-gray-200"
+            >
+              {/* USER */}
+              <div className="font-medium">{payment.memberEmail}</div>
 
-                <td className="p-4 font-semibold text-green-300">
-                  {payment.amount} tk
-                </td>
+              {/* AMOUNT */}
+              <div className="font-semibold text-green-400">
+                {payment.amount} tk
+              </div>
 
-                <td className="p-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm text-white ${
-                      payment.type === "membership"
-                        ? "bg-blue-600"
-                        : "bg-purple-600"
-                    }`}
-                  >
-                    {payment.type}
-                  </span>
-                </td>
+              {/* TYPE */}
+              <div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    payment.type === "membership"
+                      ? "bg-blue-600 text-white"
+                      : "bg-purple-600 text-white"
+                  }`}
+                >
+                  {payment.type}
+                </span>
+              </div>
 
-                <td className="p-4">{payment.clubName}</td>
+              {/* CLUB NAME (fallback → none) */}
+              <div className="text-gray-300">
+                {payment.club || "—"}
+              </div>
 
-                <td className="p-4 text-gray-300">
-                  {new Date(payment.date).toLocaleDateString()}
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+              {/* DATE */}
+              <div className="text-gray-400">
+                {new Date(payment.createdAt).toLocaleDateString()}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );

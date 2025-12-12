@@ -10,14 +10,7 @@ export default function EventRegistrations() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const axiosSecure  = useAxiosSecure()
-  // Load events (static demo)
-  // useEffect(() => {
-  //   setEvents([
-  //     { _id: "1", title: "Tech Conference 2025", date: "2025-03-15" },
-  //     { _id: "2", title: "Creative Art Workshop", date: "2025-04-10" },
-  //   ]);
-  // }, []);
-
+ 
   const { data: events = [], isLoading} = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
@@ -28,29 +21,37 @@ export default function EventRegistrations() {
   console.log(events)
 
   // Load registrations
-  const loadRegistrations = (eventId) => {
+  const loadRegistrations = async(eventId) => {
     setSelectedEvent(eventId);
 
-    setRegistrations([
-      {
-        _id: "r1",
-        userEmail: "john@example.com",
-        status: "registered",
-        registeredAt: "2025-01-12",
-      },
-      {
-        _id: "r2",
-        userEmail: "emily@example.com",
-        status: "cancelled",
-        registeredAt: "2025-01-14",
-      },
-      {
-        _id: "r3",
-        userEmail: "michael@example.com",
-        status: "registered",
-        registeredAt: "2025-01-18",
-      },
-    ]);
+   try {
+      const res = await axiosSecure.get(`/eventRegister/${eventId}`);
+      setRegistrations(res.data);
+    } catch (error) {
+      console.error("Error loading members:", error);
+    }
+    
+
+    // setRegistrations([
+    //   {
+    //     _id: "r1",
+    //     userEmail: "john@example.com",
+    //     status: "registered",
+    //     registeredAt: "2025-01-12",
+    //   },
+    //   {
+    //     _id: "r2",
+    //     userEmail: "emily@example.com",
+    //     status: "cancelled",
+    //     registeredAt: "2025-01-14",
+    //   },
+    //   {
+    //     _id: "r3",
+    //     userEmail: "michael@example.com",
+    //     status: "registered",
+    //     registeredAt: "2025-01-18",
+    //   },
+    // ]);
   };
 
   if(isLoading)
@@ -139,7 +140,7 @@ export default function EventRegistrations() {
                         </span>
                       </td>
 
-                      <td className="p-3 border">{reg.registeredAt}</td>
+                      <td className="p-3 border">{new Date(reg.registerAt).toDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
