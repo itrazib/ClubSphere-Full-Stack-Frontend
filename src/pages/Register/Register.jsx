@@ -1,235 +1,169 @@
-import { Link, useLocation, useNavigate } from 'react-router'
-import { FcGoogle } from 'react-icons/fc'
-import useAuth from '../../hooks/useAuth'
+import { Link, useLocation, useNavigate } from "react-router";
+import { FcGoogle } from "react-icons/fc";
+import useAuth from "../../hooks/useAuth";
+import { TbFidgetSpinner } from "react-icons/tb";
+import { useForm } from "react-hook-form";
+import { imageUpload, saveOrUpdateUser } from "../../utils";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
-import { TbFidgetSpinner } from 'react-icons/tb'
-import { useForm } from 'react-hook-form'
-import { imageUpload, saveOrUpdateUser } from '../../utils'
-import { toast } from 'react-toastify'
+export default function Register() {
+  const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/";
 
-const Register = () => {
-  const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state || '/'
-
-  // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
-  console.log(errors)
-  const onSubmit = async data => {
-    const { name, image, email, password } = data
-    const imageFile = image[0]
-    // const formData = new FormData()
-    // formData.append('image', imageFile)
+  const onSubmit = async (data) => {
+    const { name, email, password, image } = data;
 
     try {
-    
-      const imageURL = await imageUpload(imageFile)
-     
+      const imgURL = await imageUpload(image[0]);
+      await createUser(email, password);
 
-      //1. User Registration
-      const result = await createUser(email, password)
+      await saveOrUpdateUser({ name, email, image: imgURL });
+      await updateUserProfile(name, imgURL);
 
-      await saveOrUpdateUser({ name, email, image: imageURL })
-
-      
-
-      //3. Save username & profile photo
-      await updateUserProfile(name, imageURL)
-
-      navigate(from, { replace: true })
-      toast.success('Signup Successful')
-
-      console.log(result)
+      toast.success("Signup Successful");
+      navigate(from, { replace: true });
     } catch (err) {
-      console.log(err)
-      toast.error(err?.message)
+      toast.error(err?.message);
     }
-  }
+  };
 
-  // Handle Google Signin
   const handleGoogleSignIn = async () => {
     try {
-      //User Registration using google
-      const { user } = await signInWithGoogle()
+      const { user } = await signInWithGoogle();
 
       await saveOrUpdateUser({
         name: user?.displayName,
         email: user?.email,
         image: user?.photoURL,
-      })
+      });
 
-      navigate(from, { replace: true })
-      toast.success('Signup Successful')
+      toast.success("Signup Successful");
+      navigate(from, { replace: true });
     } catch (err) {
-      console.log(err)
-      toast.error(err?.message)
+      toast.error(err?.message);
     }
-  }
+  };
+
   return (
-    <div className='flex justify-center items-center min-h-screen bg-white'>
-      <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
-        <div className='mb-8 text-center'>
-          <h1 className='my-3 text-4xl font-bold'>Sign Up</h1>
-          <p className='text-sm text-gray-400'>Welcome to PlantNet</p>
-        </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate=''
-          action=''
-          className='space-y-6 ng-untouched ng-pristine ng-valid'
-        >
-          <div className='space-y-4'>
-            <div>
-              <label htmlFor='email' className='block mb-2 text-sm'>
-                Name
-              </label>
-              <input
-                type='text'
-                id='name'
-                placeholder='Enter Your Name Here'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
-                data-temp-mail-org='0'
-                {...register('name', {
-                  required: 'Name is required',
-                  maxLength: {
-                    value: 20,
-                    message: 'Name cannot be too long',
-                  },
-                })}
-              />
-              {errors.name && (
-                <p className='text-red-500 text-xs mt-1'>
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-            {/* Image */}
-            <div>
-              <label
-                htmlFor='image'
-                className='block mb-2 text-sm font-medium text-gray-700'
-              >
-                Profile Image
-              </label>
-              <input
-                name='image'
-                type='file'
-                id='image'
-                accept='image/*'
-                className='block w-full text-sm text-gray-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-md file:border-0
-      file:text-sm file:font-semibold
-      file:bg-lime-50 file:text-lime-700
-      hover:file:bg-lime-100
-      bg-gray-100 border border-dashed border-lime-300 rounded-md cursor-pointer
-      focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-lime-400
-      py-2'
-                {...register('image')}
-              />
-              <p className='mt-1 text-xs text-gray-400'>
-                PNG, JPG or JPEG (max 2MB)
-              </p>
-            </div>
-            <div>
-              <label htmlFor='email' className='block mb-2 text-sm'>
-                Email address
-              </label>
-              <input
-                type='email'
-                id='email'
-                placeholder='Enter Your Email Here'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
-                data-temp-mail-org='0'
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value:/^(?=.*[A-Z])(?=.*[a-z]).{6,}$/,
-                    message: 'Please enter a valid email address.',
-                  },
-                })}
-              />
-              {errors.email && (
-                <p className='text-red-500 text-xs mt-1'>
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <div className='flex justify-between'>
-                <label htmlFor='password' className='text-sm mb-2'>
-                  Password
-                </label>
-              </div>
-              <input
-                type='password'
-                autoComplete='new-password'
-                id='password'
-                placeholder='*******'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters',
-                  },
-                })}
-              />
-              {errors.password && (
-                <p className='text-red-500 text-xs mt-1'>
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-lime-100 p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md backdrop-blur-lg bg-white/50 p-8 rounded-3xl shadow-xl border border-white/40"
+      >
+        <h2 className="text-4xl font-bold text-center text-gray-900 mb-2">
+          Create Account
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          Join the platform — it's quick and easy!
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label className="text-sm font-medium">Full Name</label>
+            <input
+              type="text"
+              className="w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-300 focus:ring-2 focus:ring-lime-500"
+              {...register("name", { required: "Name is required" })}
+              placeholder="John Doe"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs">{errors.name.message}</p>
+            )}
           </div>
 
+          {/* Image */}
           <div>
-            <button
-              type='submit'
-              className='bg-lime-500 w-full rounded-md py-3 text-white'
-            >
-              {loading ? (
-                <TbFidgetSpinner className='animate-spin m-auto' />
-              ) : (
-                'Continue'
-              )}
-            </button>
+            <label className="text-sm font-medium">Profile Photo</label>
+            <input
+              type="file"
+              accept="image/*"
+              {...register("image")}
+              className="w-full text-sm bg-white/70 border border-dashed border-lime-400 rounded-xl p-2 cursor-pointer"
+            />
           </div>
+
+          {/* Email */}
+          <div>
+            <label className="text-sm font-medium">Email</label>
+            <input
+              type="email"
+              placeholder="example@mail.com"
+              className="w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-300 focus:ring-2 focus:ring-lime-500"
+              {...register("email", {
+                required: "Email is required",
+              })}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm font-medium">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-300 focus:ring-2 focus:ring-lime-500"
+              {...register("password", {
+                required: "Password required",
+                minLength: { value: 6, message: "Minimum 6 characters" },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* Submit */}
+          <button
+            className="w-full bg-lime-600 hover:bg-lime-700 text-white py-3 rounded-xl font-semibold transition"
+            type="submit"
+          >
+            {loading ? (
+              <TbFidgetSpinner className="animate-spin mx-auto" />
+            ) : (
+              "Sign Up"
+            )}
+          </button>
         </form>
-        <div className='flex items-center pt-4 space-x-1'>
-          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
-          <p className='px-3 text-sm dark:text-gray-400'>
-            Signup with social accounts
-          </p>
-          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+
+        {/* Separator */}
+        <div className="flex items-center gap-4 my-6">
+          <div className="h-px bg-gray-300 flex-1"></div>
+          <span className="text-gray-500 text-sm">OR</span>
+          <div className="h-px bg-gray-300 flex-1"></div>
         </div>
+
+        {/* Google */}
         <div
           onClick={handleGoogleSignIn}
-          className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
+          className="flex items-center justify-center gap-3 border border-gray-300 rounded-xl p-3 cursor-pointer hover:bg-white/60 transition"
         >
-          <FcGoogle size={32} />
-
-          <p>Continue with Google</p>
+          <FcGoogle size={28} />
+          <span className="font-medium">Continue with Google</span>
         </div>
-        <p className='px-6 text-sm text-center text-gray-400'>
-          Already have an account?{' '}
-          <Link
-            to='/login'
-            className='hover:underline hover:text-lime-500 text-gray-600'
-          >
+
+        {/* Login Link */}
+        <p className="mt-6 text-center text-gray-700 text-sm">
+          Already have an account?{" "}
+          <Link className="text-lime-700 font-semibold hover:underline" to="/login">
             Login
           </Link>
-          .
         </p>
-      </div>
+      </motion.div>
     </div>
-  )
+  );
 }
-
-export default Register

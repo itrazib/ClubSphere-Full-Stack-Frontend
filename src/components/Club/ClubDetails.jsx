@@ -29,6 +29,14 @@ export default function ClubDetails({ onBack }) {
       return res.data;
     },
   });
+  const { data: count } = useQuery({
+    queryKey: ["memberCount", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/memberships/count/${id}`);
+      console.log(res.data)
+      return res.data;
+    },
+  });
 
   // Check Membership Status
   const { data: isMember } = useQuery({
@@ -41,6 +49,8 @@ export default function ClubDetails({ onBack }) {
     },
     enabled: !!user?.email,
   });
+
+
 
   const { data: events, isLoading: eventsLoading } = useQuery({
     queryKey: ["clubEvents", id],
@@ -138,7 +148,7 @@ export default function ClubDetails({ onBack }) {
             <Users size={20} /> Members
           </h3>
           <p className="text-4xl font-bold text-purple-300">
-            {club.members?.length || 0}
+            {count.count || 0}
           </p>
         </div>
       </div>

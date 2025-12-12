@@ -22,6 +22,8 @@ import Events from "../components/Events/Events";
 import EventDetails from "../components/Events/EventDetails";
 import Profile from "../components/Profile/Profile";
 import MemberClubs from "../components/Member/MemberClubs";
+import MyEvents from "../components/Member/MyEvents";
+import PaymentHistory from "../components/Member/PaymentHistory";
 
 
 const router = createBrowserRouter([
@@ -111,6 +113,14 @@ const router = createBrowserRouter([
             {
                 path:"member-clubs",
                 element:<PrivateRoute><MemberClubs></MemberClubs></PrivateRoute>
+            },
+            {
+                path:"member-events",
+                element:<PrivateRoute><MyEvents></MyEvents></PrivateRoute>
+            },
+            {
+                path:"member-payments",
+                element:<PrivateRoute><PaymentHistory></PaymentHistory></PrivateRoute>
             }
         ]
     }
