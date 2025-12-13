@@ -18,37 +18,37 @@ export default function Clubs() {
     queryKey: ["clubs"],
     queryFn: async () => {
       const res = await axiosSecure.get("/clubs/approved");
+      console.log(res.data)
       return res.data;
     },
   });
 
-  if (isLoading) return <Loading />;
+  
 
   // ---------- Unique Categories ----------
-  const categories = ["all", ...new Set(clubs.map((c) => c.category))];
+  const categories = useMemo(() => {
+    return ["all", ...new Set(clubs.map((c) => c.category))];
+  }, [clubs]);
 
   // ---------- Filter + Search + Sort ----------
   const filteredClubs = useMemo(() => {
     let data = [...clubs];
 
-    // Search
     const searchText = search?.toLowerCase() || "";
-    if (searchText.trim() !== "") {
+    if (searchText.trim()) {
       data = data.filter((club) =>
         club?.name?.toLowerCase().includes(searchText)
       );
     }
 
-    // Category Filter
     if (category !== "all") {
       data = data.filter((club) => club.category === category);
     }
 
-    // Sorting
     if (sort === "latest") {
       data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sort === "oldest") {
-      data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      data.sort((a, b) => new Date(a.createdAt) - new Date(a.createdAt));
     } else if (sort === "members-high") {
       data.sort((a, b) => b.membersCount - a.membersCount);
     } else if (sort === "members-low") {
@@ -58,7 +58,9 @@ export default function Clubs() {
     return data;
   }, [clubs, search, category, sort]);
 
-  // Reset filters
+  if (isLoading) return <Loading />;
+
+  // ---------- Reset Filters ----------
   const clearFilters = () => {
     setSearch("");
     setCategory("all");
@@ -68,34 +70,50 @@ export default function Clubs() {
   return (
     <div className="mt-24 max-w-7xl mx-auto px-4">
 
-      {/* ------------------------------------ */}
-      {/*    Stats Panel */}
-      {/* ------------------------------------ */}
-      <div className="bg-white shadow-md rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-lg font-semibold">
-          Showing <span className="text-blue-600">{filteredClubs.length}</span>{" "}
+      {/* ================================================= */}
+      {/*                Page Heading                      */}
+      {/* ================================================= */}
+      <div className="mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+          Discover Student Clubs
+        </h1>
+        <p className="mt-4 text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          Explore approved clubs, filter by category, search by name, and find
+          communities that match your passion. Join, connect, and grow together.
+        </p>
+      </div>
+
+      {/* ================================================= */}
+      {/*                Stats Panel                       */}
+      {/* ================================================= */}
+      <div className="bg-white shadow-md rounded-2xl p-5 mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Showing{" "}
+          <span className="text-blue-600 font-bold">
+            {filteredClubs.length}
+          </span>{" "}
           of {clubs.length} clubs
         </h2>
 
         <button
           onClick={clearFilters}
-          className="px-4 py-2 text-sm rounded-lg border hover:bg-gray-100 transition"
+          className="px-4 py-2 text-sm rounded-lg border border-pink-600 hover:bg-gray-100 transition"
         >
           Reset Filters
         </button>
       </div>
 
-      {/* ------------------------------------ */}
-      {/* Search + Filters Bar */}
-      {/* ------------------------------------ */}
+      {/* ================================================= */}
+      {/*             Search + Filters Bar                 */}
+      {/* ================================================= */}
       <div className="bg-white shadow-md p-5 rounded-2xl mb-10">
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
 
           {/* Search Input */}
           <input
             type="text"
-            placeholder="Search clubs..."
-            className="w-full lg:w-1/3 p-3 border rounded-xl focus:ring focus:ring-blue-100"
+            placeholder="Search clubs by name..."
+            className="w-full lg:w-1/3 p-3 border border-pink-600 bg-white rounded-xl focus:ring focus:ring-pink-500"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -104,7 +122,7 @@ export default function Clubs() {
           <div className="flex items-center gap-3 w-full lg:w-auto">
             <SlidersHorizontal className="text-gray-600" />
             <select
-              className="p-3 border rounded-xl w-full lg:w-auto"
+              className="p-3 border border-pink-600 rounded-xl w-full lg:w-auto"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
             >
@@ -122,9 +140,9 @@ export default function Clubs() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm border transition ${
+              className={`px-4 py-2 rounded-full text-sm border border-pink-600 transition ${
                 category === cat
-                  ? "bg-blue-600 text-white shadow"
+                  ? "bg-pink-600 font-bold text-white shadow"
                   : "bg-gray-100 hover:bg-gray-200"
               }`}
             >
@@ -134,23 +152,23 @@ export default function Clubs() {
         </div>
       </div>
 
-      {/* ------------------------------------ */}
-      {/* Cards Grid */}
-      {/* ------------------------------------ */}
+      {/* ================================================= */}
+      {/*                Cards Grid                        */}
+      {/* ================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredClubs.length ? (
           filteredClubs.map((club) => (
             <ClubCard key={club._id} club={club} />
           ))
         ) : (
-          <div className="text-center col-span-3 py-10">
+          <div className="text-center col-span-3 py-12">
             <img
               src="https://i.ibb.co/VmGQNW3/empty.png"
               alt="empty"
               className="w-40 mx-auto opacity-70"
             />
             <p className="text-gray-600 mt-4 text-lg">
-              No clubs match your search/filter.
+              No clubs match your search or filters.
             </p>
           </div>
         )}

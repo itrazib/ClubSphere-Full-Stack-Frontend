@@ -83,24 +83,24 @@ export default function EventDetails() {
   if (!event) return null;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-20 text-white">
+    <div className="max-w-7xl mx-auto p-6 mt-20 ">
       {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="bg-gradient-to-br from-neutral-900 to-neutral-800 p-8 rounded-3xl shadow-xl border border-white/10"
+        className="bg-white p-8 rounded-3xl shadow-xl border border-white/10"
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-gradient mb-4">
           {event.title}
         </h1>
 
-        <p className="text-neutral-300 leading-relaxed mb-5">
+        <p className="text-black leading-relaxed mb-5">
           {event.description}
         </p>
 
         {/* EVENT INFO */}
-        <div className="grid md:grid-cols-2 gap-4 text-neutral-200">
+        <div className="grid md:grid-cols-2 gap-4 text-pink-700">
           <div className="flex items-center gap-3">
             <Calendar className="w-6 h-6 text-emerald-400" />
             <span className="text-lg">

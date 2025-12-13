@@ -1,8 +1,21 @@
+// import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Calendar, Users } from "lucide-react";
 import { Link } from "react-router";
+// import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export function ClubCard({ club }) {
+  // const axiosSecure = useAxiosSecure()
+ 
+  // const {data: count} = useQuery({
+  //   queryKey:("memberCount"),
+  //   queryFn: async () => {
+  //     const res = await axiosSecure(`/memberships/count/${club._id}`)
+  //     console.log(res.data)
+  //     return res.data;
+  //   }
+  // })
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 25 }}
@@ -13,7 +26,7 @@ export function ClubCard({ club }) {
       <div
         className="
           rounded-2xl overflow-hidden shadow-xl 
-          bg-[#0c0c0c]/60 backdrop-blur-sm border border-white/10 
+           backdrop-blur-sm border border-white/10 
           hover:shadow-2xl hover:scale-[1.02] transition-all duration-300
           flex flex-col h-[420px]
         "
@@ -39,15 +52,15 @@ export function ClubCard({ club }) {
         {/* Content */}
         <div className="flex flex-col flex-grow p-5">
           {/* Description fixed 2 lines */}
-          <p className="text-gray-200 text-sm line-clamp-2 leading-relaxed h-[42px]">
+          <p className="text-black text-sm line-clamp-2 leading-relaxed h-[42px]">
             {club.description}
           </p>
 
           {/* Stats */}
-          <div className="flex items-center justify-between text-gray-300 text-sm mt-3">
+          <div className="flex items-center justify-between text-pink-600 text-sm mt-3">
             <span className="flex items-center gap-1">
               <Users size={16} className="text-blue-400" />
-              {club.members?.length || 0} Members
+              {club.membersCount || 0} Members
             </span>
 
             <span className="flex items-center gap-1">
