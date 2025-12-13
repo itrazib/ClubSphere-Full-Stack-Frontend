@@ -238,15 +238,15 @@ export default function ClubDetails({ onBack }) {
                 </div>
 
                 <div className="p-5">
-                  <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition">
+                  <h3 className="text-xl font-bold text-black group-hover:text-purple-300 transition">
                     {event.title}
                   </h3>
 
-                  <p className="text-gray-300 mt-2 text-sm line-clamp-2">
+                  <p className="text-black mt-2 text-sm line-clamp-2">
                     {event.description}
                   </p>
 
-                  <div className="grid grid-cols-2 gap-3 mt-4 text-gray-300 text-sm">
+                  <div className="grid grid-cols-2 gap-3 mt-4 text-pink-600 text-sm">
                     <div className="flex items-center gap-2">
                       <MapPin size={16} className="opacity-80" />
                       <span>{event.location}</span>
@@ -265,14 +265,11 @@ export default function ClubDetails({ onBack }) {
                   <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/10">
                     <Link
                       to={`/eventDetails/${event._id}`}
-                      className="text-sm text-purple-300 hover:text-purple-400 transition"
+                      className="text-sm text-pink-600 hover:text-purple-400 transition"
                     >
-                      View Details
+                      <button className="w-full btn-club">View Details</button>
                     </Link>
 
-                    <button className="px-4 py-1.5 btn-club rounded-lg text-white text-sm shadow-md hover:opacity-90 transition">
-                      Join Event
-                    </button>
                   </div>
                 </div>
               </motion.div>

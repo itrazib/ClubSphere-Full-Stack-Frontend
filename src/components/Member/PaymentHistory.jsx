@@ -1,7 +1,12 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { CreditCard, CheckCircle2, XCircle, Clock } from "lucide-react";
+import {
+  CreditCard,
+  CheckCircle2,
+  XCircle,
+  Clock,
+} from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import Loading from "../Loader/Loading";
@@ -13,127 +18,161 @@ export default function PaymentHistory() {
   const { data: payments = [], isLoading, isError } = useQuery({
     queryKey: ["payment-history", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/member/payments?email=${user.email}`);
+      const res = await axiosSecure.get(
+        `/member/payments?email=${user.email}`
+      );
       return res.data;
     },
     enabled: !!user?.email,
   });
 
   if (isLoading) return <Loading />;
-  if (isError) return <p className="text-red-600">Failed to load payments.</p>;
+  if (isError)
+    return (
+      <p className="text-center text-red-500 mt-10">
+        Failed to load payments.
+      </p>
+    );
+
+  const statusUI = {
+    paid: {
+      text: "Paid",
+      color: "text-emerald-600",
+      bg: "bg-emerald-100",
+      icon: <CheckCircle2 size={16} />,
+    },
+    pending: {
+      text: "Pending",
+      color: "text-amber-600",
+      bg: "bg-amber-100",
+      icon: <Clock size={16} />,
+    },
+    failed: {
+      text: "Failed",
+      color: "text-rose-600",
+      bg: "bg-rose-100",
+      icon: <XCircle size={16} />,
+    },
+  };
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10">
-      <motion.h2
-        initial={{ opacity: 0, y: -10 }}
+    <div className="max-w-6xl mx-auto px-4 mt-12">
+      {/* ===== Header ===== */}
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold flex items-center gap-2 mb-6"
+        className="mb-8 flex items-center gap-3"
       >
-        <CreditCard className="w-7 h-7 text-blue-500" />
-        Payment History
-      </motion.h2>
+        <div className="p-3 rounded-xl bg-indigo-100 text-indigo-600">
+          <CreditCard size={26} />
+        </div>
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900">
+            Payment History
+          </h2>
+          <p className="text-sm text-gray-500">
+            All your membership & event payments
+          </p>
+        </div>
+      </motion.div>
 
-      {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto shadow-lg rounded-2xl bg-white">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-4 font-semibold text-gray-700">ClubId</th>
-              <th className="p-4 font-semibold text-gray-700">Type</th>
-              <th className="p-4 font-semibold text-gray-700">Amount</th>
-              <th className="p-4 font-semibold text-gray-700">Date</th>
-              <th className="p-4 font-semibold text-gray-700">Status</th>
+      {/* ===== Desktop Table ===== */}
+      <div className="hidden md:block bg-white rounded-3xl border shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr className="text-sm text-gray-500">
+              <th className="p-5 text-left">Club</th>
+              <th className="p-5 text-left">Type</th>
+              <th className="p-5 text-left">Amount</th>
+              <th className="p-5 text-left">Date</th>
+              <th className="p-5 text-left">Status</th>
             </tr>
           </thead>
 
           <tbody>
-            {payments.map((p) => (
-              <motion.tr
-                key={p._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="border-b hover:bg-gray-50 transition"
-              >
-                <td className="p-4">{p.clubId}</td>
-                <td className="p-4 capitalize">{p.type}</td>
-                <td className="p-4 font-semibold">${p.amount}</td>
-                <td className="p-4">{new Date(p.date).toLocaleDateString()}</td>
-
-                <td className="p-4">
-                  {p.status === "paid" && (
-                    <span className="flex items-center gap-1 text-green-600 font-semibold">
-                      <CheckCircle2 size={18} /> Paid
+            {payments.map((p, i) => {
+              const status = statusUI[p.status] || {};
+              return (
+                <motion.tr
+                  key={p._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="p-5 font-medium text-gray-800">
+                    {p.club}
+                  </td>
+                  <td className="p-5 capitalize text-gray-600">
+                    {p.type}
+                  </td>
+                  <td className="p-5 font-semibold text-gray-900">
+                    ${p.amount}
+                  </td>
+                  <td className="p-5 text-gray-600">
+                    {new Date(p.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="p-5">
+                    <span
+                      className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${status.bg} ${status.color}`}
+                    >
+                      {status.icon} {status.text}
                     </span>
-                  )}
-                  {p.status === "pending" && (
-                    <span className="flex items-center gap-1 text-yellow-500 font-semibold">
-                      <Clock size={18} /> Pending
-                    </span>
-                  )}
-                  {p.status === "failed" && (
-                    <span className="flex items-center gap-1 text-red-500 font-semibold">
-                      <XCircle size={18} /> Failed
-                    </span>
-                  )}
-                </td>
-              </motion.tr>
-            ))}
+                  </td>
+                </motion.tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Mobile Cards */}
+      {/* ===== Mobile Cards ===== */}
       <div className="md:hidden space-y-4">
-        {payments.length === 0 ? (
-          <p className="text-center text-gray-500 p-4">
-            No payment history available.
-          </p>
-        ) : (
-          payments.map((p) => (
+        {payments.map((p, i) => {
+          const status = statusUI[p.status] || {};
+          return (
             <motion.div
               key={p._id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-md p-4 border"
+              transition={{ delay: i * 0.05 }}
+              className="bg-white rounded-2xl border shadow-md p-5"
             >
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold">Club ID:</span> {p.clubId}
-              </p>
-
-              <p className="text-sm text-gray-600 mt-1">
-                <span className="font-semibold">Type:</span> {p.type}
-              </p>
-
-              <p className="mt-1 text-sm font-semibold">
-                <span className="font-semibold">Amount:</span> ${p.amount}
-              </p>
-
-              <p className="text-sm mt-1">
-                <span className="font-semibold">Date:</span>{" "}
-                {new Date(p.date).toLocaleDateString()}
-              </p>
-
-              <div className="mt-2">
-                {p.status === "paid" && (
-                  <span className="flex items-center gap-1 text-green-600 font-semibold">
-                    <CheckCircle2 size={18} /> Paid
-                  </span>
-                )}
-                {p.status === "pending" && (
-                  <span className="flex items-center gap-1 text-yellow-500 font-semibold">
-                    <Clock size={18} /> Pending
-                  </span>
-                )}
-                {p.status === "failed" && (
-                  <span className="flex items-center gap-1 text-red-500 font-semibold">
-                    <XCircle size={18} /> Failed
-                  </span>
-                )}
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold text-gray-800">
+                  {p.club}
+                </h3>
+                <span
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full ${status.bg} ${status.color}`}
+                >
+                  {status.icon} {status.text}
+                </span>
               </div>
+
+              <p className="text-sm text-gray-500">
+                Type: <span className="capitalize">{p.type}</span>
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                Amount:{" "}
+                <span className="font-semibold text-gray-800">
+                  ${p.amount}
+                </span>
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                Date:{" "}
+                {new Date(p.createdAt).toLocaleDateString()}
+              </p>
             </motion.div>
-          ))
-        )}
+          );
+        })}
       </div>
+
+      {/* ===== Empty State ===== */}
+      {payments.length === 0 && (
+        <div className="text-center py-16 text-gray-500">
+          No payment history found.
+        </div>
+      )}
     </div>
   );
 }

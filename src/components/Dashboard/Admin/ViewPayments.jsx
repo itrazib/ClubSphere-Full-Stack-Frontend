@@ -3,13 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loading from "../../Loader/Loading";
-import { CreditCard, User, Layers, CalendarDays } from "lucide-react";
+import {
+  CreditCard,
+  User,
+  Layers,
+  CalendarDays,
+} from "lucide-react";
 
 export default function ViewPayments() {
   const axiosSecure = useAxiosSecure();
 
   const { data: payments = [], isLoading } = useQuery({
-    queryKey: ["payments"],
+    queryKey: ["admin-payments"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin/payments");
       return res.data;
@@ -19,20 +24,25 @@ export default function ViewPayments() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="p-6 space-y-6 w-full">
-      {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: -8 }}
+    <div className="w-full px-6 py-8 space-y-6 bg-white">
+      {/* ===== Title ===== */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl font-bold text-white"
+        className="flex flex-col gap-1"
       >
-        Payment Records
-      </motion.h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Payment Records
+        </h1>
+        <p className="text-sm text-gray-500">
+          All membership & event payment transactions
+        </p>
+      </motion.div>
 
-      {/* Table Container */}
-      <div className="overflow-hidden border border-white/10 rounded-xl bg-[#141414] shadow-lg">
-        {/* Table Header */}
-        <div className="grid grid-cols-5 px-6 py-3 bg-[#1c1c1c] border-b border-white/10 text-gray-300 text-sm font-semibold uppercase">
+      {/* ===== Table Wrapper ===== */}
+      <div className="overflow-hidden rounded-3xl border border-gray-200 shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
+        {/* Header */}
+        <div className="grid grid-cols-5 px-6 py-4 bg-gray-50 text-gray-600 text-sm font-semibold">
           <div className="flex items-center gap-2">
             <User size={16} /> User
           </div>
@@ -48,50 +58,59 @@ export default function ViewPayments() {
           </div>
         </div>
 
-        {/* Table Rows */}
-        <div className="">
+        {/* Rows */}
+        <div className="divide-y">
           {payments.map((payment, index) => (
             <motion.div
               key={payment._id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.04 }}
-              className="grid grid-cols-5 px-6 py-4 border-b border-white/5 hover:bg-white/5 transition text-gray-200"
+              className="grid grid-cols-5 px-6 py-4 text-gray-700 hover:bg-gray-50 transition"
             >
               {/* USER */}
-              <div className="font-medium">{payment.memberEmail}</div>
+              <div className="font-medium text-gray-900">
+                {payment.memberEmail}
+              </div>
 
               {/* AMOUNT */}
-              <div className="font-semibold text-green-400">
-                {payment.amount} tk
+              <div className="font-semibold text-emerald-600">
+                ৳{payment.amount}
               </div>
 
               {/* TYPE */}
               <div>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm ${
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
                     payment.type === "membership"
-                      ? "bg-blue-600 text-white"
-                      : "bg-purple-600 text-white"
+                      ? "bg-indigo-100 text-indigo-600"
+                      : "bg-purple-100 text-purple-600"
                   }`}
                 >
                   {payment.type}
                 </span>
               </div>
 
-              {/* CLUB NAME (fallback → none) */}
-              <div className="text-gray-300">
+              {/* CLUB */}
+              <div className="text-gray-600">
                 {payment.club || "—"}
               </div>
 
               {/* DATE */}
-              <div className="text-gray-400">
+              <div className="text-gray-500">
                 {new Date(payment.createdAt).toLocaleDateString()}
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* ===== Empty State ===== */}
+      {payments.length === 0 && (
+        <div className="text-center py-16 text-gray-500">
+          No payment records found.
+        </div>
+      )}
     </div>
   );
 }

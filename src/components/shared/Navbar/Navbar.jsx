@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
 import useAuth from "../../../hooks/useAuth";
+import logo from "../../../assets/logo-removebg-preview.png"
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -13,7 +14,7 @@ export default function Navbar() {
         
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-indigo-600">
-          ClubSphere
+          <img src={logo} className="h-15 w-18" alt="" />
         </Link>
 
         {/* Desktop Menu */}

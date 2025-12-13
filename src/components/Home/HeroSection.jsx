@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 export default function HeroSection() {
   const words = ["Discover.", "Connect.", "Grow."];
@@ -14,7 +15,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[55vh] flex items-center justify-center text-center px-6 overflow-hidden">
+    <section className="relative min-h-[55vh] flex items-center justify-center text-center px-6 mt-20 overflow-hidden">
       
       {/* Animated Gradient Blobs */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse"></div>
@@ -39,9 +40,9 @@ export default function HeroSection() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           
           {/* Premium Gradient Button */}
-          <button className="px-7 py-3 rounded-xl text-white font-semibold shadow-lg btn-club">
+         <Link to="/clubs"> <button className="px-7 py-3 rounded-xl text-white font-semibold shadow-lg btn-club">
             Join a Club
-          </button>
+          </button></Link>
 
           {/* Glass Button */}
           <button className="px-7 py-3 rounded-xl font-semibold backdrop-blur-md border border-white/30 bg-white/10 text-gray-900 dark:text-white shadow-md hover:bg-white/20 transition-all duration-300">

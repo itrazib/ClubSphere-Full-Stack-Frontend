@@ -64,7 +64,7 @@ export default function Profile() {
                 fontWeight: 600,
               }}
             >
-              {role.toUpperCase()}
+              {role}
             </span>
           </div>
         </div>
@@ -87,13 +87,25 @@ export default function Profile() {
    MEMBER SECTION
 -------------------------- */
 function MemberSection() {
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+
+  // Fetch Member Stats
+  const { data: stats = [] } = useQuery({
+    queryKey: ["member-stats", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/member/stats?email=${user.email}`);
+      
+      return res.data;
+    },
+  });
   return (
     <>
       <h3 style={{ fontSize: 20, marginBottom: 14 }}>Member Profile</h3>
 
       <div style={{ display: "grid", gap: 14 }}>
-        <Card label="Total Registered Events" value="12" />
-        <Card label="Joined Clubs" value="4" />
+        <Card label="Total Registered Events" value={stats.totalClubsJoined} />
+        <Card label="Joined Clubs" value={stats.totalEventsJoined} />
         <Card label="Attendance" value="94%" />
       </div>
     </>
@@ -131,14 +143,25 @@ function ManagerSection() {
    ADMIN SECTION
 -------------------------- */
 function AdminSection() {
+
+   const axiosSecure = useAxiosSecure();
+
+  const { data: stats = {},} = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/admin/stats")
+      
+      return res.data
+    },
+  });
   return (
     <>
       <h3 style={{ fontSize: 20, marginBottom: 14 }}>Admin Overview</h3>
 
       <div style={{ display: "grid", gap: 14 }}>
-        <Card label="Total Users" value="820" />
-        <Card label="Total Clubs" value="34" />
-        <Card label="Pending Approvals" value="5" />
+        <Card label="Total Users" value={stats.totalUsers} />
+        <Card label="Total Clubs" value={stats.totalClubs.approved} />
+        <Card label="Pending Approvals" value={stats.totalClubs.pending} />
       </div>
     </>
   );

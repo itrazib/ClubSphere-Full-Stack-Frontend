@@ -8,6 +8,7 @@ import useRole from "../../../hooks/useRole";
 import useAuth from "../../../hooks/useAuth";
 import { FcStatistics } from "react-icons/fc";
 import { CgProfile } from "react-icons/cg";
+import logo from "../../../assets/logo-removebg-preview.png"
 
 /*
   This Sidebar provides:
@@ -56,7 +57,7 @@ export default function Sidebar() {
       >
         <div style={{ marginBottom: 22 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#6b21a8", fontWeight: 700, fontSize: 20 }}>
-            ClubSphere
+            <img src={logo} className="h-15 w-15" alt="" />
           </Link>
         </div>
 

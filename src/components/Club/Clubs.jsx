@@ -58,11 +58,11 @@ export default function Clubs() {
   }, [clubs, search, category, sort]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-24">
+    <div className="max-w-7xl mx-auto px-4 mt-30">
 
       {/* ================= PAGE HEADER ================= */}
       <div className="text-center mb-14">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-gradient">
           Discover Student Clubs
         </h1>
         <p className="text-gray-600 mt-3 max-w-2xl mx-auto">

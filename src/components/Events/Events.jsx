@@ -58,10 +58,10 @@ const Events = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-20 relative z-20">
+    <div className="max-w-7xl mx-auto px-4 mt-30 relative z-20">
       {/* ===== Header ===== */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-gradient">
           All Events
         </h1>
         <p className="text-gray-600 mt-2">

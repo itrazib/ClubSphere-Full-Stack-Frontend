@@ -160,7 +160,7 @@ export default function EventDetails() {
         {isMember === "active" && joinedLoading && (
           <button
             disabled
-            className="px-8 py-4 text-lg bg-gray-700 rounded-2xl shadow-lg font-semibold flex items-center gap-2"
+            className="px-8 py-4 text-lg bg-pink-700 rounded-2xl shadow-lg font-semibold flex items-center gap-2"
           >
             Checking...
           </button>
@@ -171,7 +171,7 @@ export default function EventDetails() {
           !joinedLoading && (
             <button
               
-              className="px-8 py-4 text-lg bg-gray-600 rounded-2xl shadow-lg font-semibold cursor-not-allowed flex items-center gap-2"
+              className="px-8 py-4 text-lg bg-green-600 rounded-2xl shadow-lg font-semibold cursor-not-allowed flex items-center gap-2"
             >
               <CheckCircle2 className="w-5 h-5" /> Joined
             </button>
@@ -181,7 +181,7 @@ export default function EventDetails() {
           <button
             onClick={() => joinEventMutation.mutate()}
             disabled={joinEventMutation.isLoading}
-            className="px-8 py-4 text-lg bg-emerald-600 hover:bg-emerald-500 transition rounded-2xl shadow-lg flex items-center gap-2 font-semibold"
+            className="px-8 py-4 text-lg btn-club  transition rounded-2xl shadow-lg flex items-center gap-2 font-semibold"
           >
             {joinEventMutation.isLoading ? (
               "Joining..."
