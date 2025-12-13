@@ -1,43 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loading from "../Loader/Loading";
 import { ClubCard } from "./ClubCard";
-import { SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
+import ClubSkeleton from "./ClubSkeleton";
 
 export default function Clubs() {
   const axiosSecure = useAxiosSecure();
 
-  // ---------- UI States ----------
+  // ================= UI STATES =================
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("latest");
 
-  // ---------- Fetch Clubs ----------
+  // ================= FETCH CLUBS =================
   const { data: clubs = [], isLoading } = useQuery({
-    queryKey: ["clubs"],
+    queryKey: ["approvedClubs"],
     queryFn: async () => {
       const res = await axiosSecure.get("/clubs/approved");
-      console.log(res.data)
       return res.data;
     },
   });
 
-  
-
-  // ---------- Unique Categories ----------
+  // ================= UNIQUE CATEGORIES =================
   const categories = useMemo(() => {
-    return ["all", ...new Set(clubs.map((c) => c.category))];
+    return ["all", ...new Set(clubs.map((c) => c.category).filter(Boolean))];
   }, [clubs]);
 
-  // ---------- Filter + Search + Sort ----------
+  // ================= FILTER + SORT =================
   const filteredClubs = useMemo(() => {
     let data = [...clubs];
 
-    const searchText = search?.toLowerCase() || "";
-    if (searchText.trim()) {
+    if (search.trim()) {
       data = data.filter((club) =>
-        club?.name?.toLowerCase().includes(searchText)
+        club?.name?.toLowerCase().includes(search.toLowerCase())
       );
     }
 
@@ -47,84 +43,99 @@ export default function Clubs() {
 
     if (sort === "latest") {
       data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else if (sort === "oldest") {
-      data.sort((a, b) => new Date(a.createdAt) - new Date(a.createdAt));
-    } else if (sort === "members-high") {
-      data.sort((a, b) => b.membersCount - a.membersCount);
-    } else if (sort === "members-low") {
-      data.sort((a, b) => a.membersCount - b.membersCount);
+    }
+    if (sort === "oldest") {
+      data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    }
+    if (sort === "members-high") {
+      data.sort((a, b) => (b.membersCount || 0) - (a.membersCount || 0));
+    }
+    if (sort === "members-low") {
+      data.sort((a, b) => (a.membersCount || 0) - (b.membersCount || 0));
     }
 
     return data;
   }, [clubs, search, category, sort]);
 
-  if (isLoading) return <Loading />;
-
-  // ---------- Reset Filters ----------
-  const clearFilters = () => {
-    setSearch("");
-    setCategory("all");
-    setSort("latest");
-  };
-
   return (
-    <div className="mt-24 max-w-7xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4 mt-24">
 
-      {/* ================================================= */}
-      {/*                Page Heading                      */}
-      {/* ================================================= */}
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+      {/* ================= PAGE HEADER ================= */}
+      <div className="text-center mb-14">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">
           Discover Student Clubs
         </h1>
-        <p className="mt-4 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Explore approved clubs, filter by category, search by name, and find
-          communities that match your passion. Join, connect, and grow together.
+        <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
+          Explore approved clubs, filter by category and find communities that
+          match your passion.
         </p>
       </div>
 
-      {/* ================================================= */}
-      {/*                Stats Panel                       */}
-      {/* ================================================= */}
-      <div className="bg-white shadow-md rounded-2xl p-5 mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Showing{" "}
-          <span className="text-blue-600 font-bold">
-            {filteredClubs.length}
-          </span>{" "}
-          of {clubs.length} clubs
-        </h2>
+      {/* ================= PREMIUM FILTER BAR ================= */}
+      <div className="relative mb-14">
 
-        <button
-          onClick={clearFilters}
-          className="px-4 py-2 text-sm rounded-lg border border-pink-600 hover:bg-gray-100 transition"
-        >
-          Reset Filters
-        </button>
-      </div>
+        {/* Glow */}
+        <div className="absolute inset-0 rounded-[32px] bg-gradient-to-r from-indigo-200/40 via-purple-200/40 to-pink-200/40 blur-3xl"></div>
 
-      {/* ================================================= */}
-      {/*             Search + Filters Bar                 */}
-      {/* ================================================= */}
-      <div className="bg-white shadow-md p-5 rounded-2xl mb-10">
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        {/* Glass Card */}
+        <div className="relative bg-white/80 backdrop-blur-2xl border border-gray-200 rounded-[32px] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
 
-          {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search clubs by name..."
-            className="w-full lg:w-1/3 p-3 border border-pink-600 bg-white rounded-xl focus:ring focus:ring-pink-500"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-black">
+                Explore Clubs
+              </h2>
+              <p className="text-sm text-gray-500">
+                Filter & discover clubs that match your interest
+              </p>
+            </div>
 
-          {/* Sort */}
-          <div className="flex items-center gap-3 w-full lg:w-auto">
-            <SlidersHorizontal className="text-gray-600" />
+            <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-indigo-100 text-pink-600">
+              {filteredClubs.length} Clubs Found
+            </span>
+          </div>
+
+          {/* Controls */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+
+            {/* 🔍 Search */}
+            <div className="relative col-span-1 lg:col-span-2">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-600"
+              />
+              <input
+                type="text"
+                placeholder="Search clubs by name..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-11 pr-4 py-3 rounded-2xl text-sm border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
+              />
+            </div>
+
+            {/* 🏷 Categories */}
+            <div className="flex bg-gray-100 rounded-2xl p-1">
+              {categories.slice(0, 3).map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`flex-1 py-2 text-sm rounded-xl font-medium transition ${
+                    category === cat
+                      ? "bg-white shadow text-pink-600"
+                      : "text-gray-500 hover:text-pink-700"
+                  }`}
+                >
+                  {cat === "all" ? "All" : cat}
+                </button>
+              ))}
+            </div>
+
+            {/* 🔃 Sort */}
             <select
-              className="p-3 border border-pink-600 rounded-xl w-full lg:w-auto"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
+              className="w-full rounded-2xl border border-pink-500 px-4 py-3 text-sm focus:ring-2 focus:ring-pink-500"
             >
               <option value="latest">Latest Created</option>
               <option value="oldest">Oldest Created</option>
@@ -132,46 +143,45 @@ export default function Clubs() {
               <option value="members-low">Members: Low → High</option>
             </select>
           </div>
-        </div>
 
-        {/* Category Chips */}
-        <div className="flex flex-wrap gap-3 mt-5">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm border border-pink-600 transition ${
-                category === cat
-                  ? "bg-pink-600 font-bold text-white shadow"
-                  : "bg-gray-100 hover:bg-gray-200"
-              }`}
-            >
-              {cat === "all" ? "All Categories" : cat}
-            </button>
-          ))}
+          {/* Active Filters */}
+          {(search || category !== "all") && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {search && (
+                <span className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-pink-600">
+                  Search: {search}
+                </span>
+              )}
+              {category !== "all" && (
+                <span className="px-3 py-1 text-xs rounded-full bg-purple-100 text-pink-600">
+                  Category: {category}
+                </span>
+              )}
+
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setCategory("all");
+                  setSort("latest");
+                }}
+                className="ml-auto text-xs text-pink-500 hover:text-pink-600 transition"
+              >
+                Clear Filters ✕
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ================================================= */}
-      {/*                Cards Grid                        */}
-      {/* ================================================= */}
+      {/* ================= CLUB GRID ================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredClubs.length ? (
-          filteredClubs.map((club) => (
-            <ClubCard key={club._id} club={club} />
-          ))
-        ) : (
-          <div className="text-center col-span-3 py-12">
-            <img
-              src="https://i.ibb.co/VmGQNW3/empty.png"
-              alt="empty"
-              className="w-40 mx-auto opacity-70"
-            />
-            <p className="text-gray-600 mt-4 text-lg">
-              No clubs match your search or filters.
-            </p>
-          </div>
-        )}
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <ClubSkeleton/>
+            ))
+          : filteredClubs.map((club) => (
+              <ClubCard key={club._id} club={club} />
+            ))}
       </div>
     </div>
   );

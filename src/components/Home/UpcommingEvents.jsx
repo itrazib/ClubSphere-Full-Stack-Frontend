@@ -21,7 +21,7 @@ export default function UpcomingEvents() {
   return (
     <div className="mt-20 px-4 max-w-7xl mx-auto">
       {/* ================= Heading ================= */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-12">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -31,7 +31,7 @@ export default function UpcomingEvents() {
           Upcoming Events ✨
         </motion.h2>
         <p className="text-gray-600 mt-2">
-          Stay updated with exciting events happening soon!
+          Don’t miss out on exciting events coming soon
         </p>
       </div>
 
@@ -46,14 +46,14 @@ export default function UpcomingEvents() {
               key={event._id}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.03, translateY: -6 }}
+              whileHover={{ scale: 1.03, y: -6 }}
               transition={{ duration: 0.4 }}
-              className="relative h-[520px] rounded-3xl overflow-hidden bg-white border border-gray-200 shadow-xl hover:shadow-2xl transition group flex flex-col"
+              className="relative h-[480px] rounded-3xl overflow-hidden bg-white border border-gray-200 shadow-lg hover:shadow-2xl transition group flex flex-col"
             >
               {/* ================= Image ================= */}
-              <div className="relative h-48 w-full overflow-hidden">
+              <div className="relative h-44 w-full overflow-hidden shrink-0">
                 <img
-                  src={event.image}
+                  src={event.image || "/placeholder.jpg"}
                   alt={event.title}
                   className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
                 />
@@ -64,31 +64,37 @@ export default function UpcomingEvents() {
 
               {/* ================= Content ================= */}
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition">
+                {/* Title (max 2 lines) */}
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition">
                   {event.title}
                 </h3>
 
-                <p className="mt-3 text-gray-600 text-sm line-clamp-3">
+                {/* Description (short & fixed height) */}
+                <p className="mt-3 text-gray-600 text-sm line-clamp-2 leading-relaxed h-[42px]">
                   {event.description}
                 </p>
 
+                {/* Info */}
                 <div className="mt-4 space-y-2 text-sm text-gray-700">
-                  <p className="flex items-center gap-2">
-                    <Calendar size={16} className="text-indigo-500" />
-                    {event.date}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <MapPin size={16} className="text-red-500" />
-                    {event.location}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <Users size={16} className="text-emerald-500" />
-                    Max: {event.maxAttendees}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <Calendar size={15} className="text-indigo-500" />
+                    <span>{event.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={15} className="text-rose-500" />
+                    <span>{event.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users size={15} className="text-emerald-500" />
+                    <span>Max: {event.maxAttendees || "Unlimited"}</span>
+                  </div>
                 </div>
 
+                {/* Push footer to bottom */}
+                <div className="mt-auto" />
+
                 {/* ================= Footer ================= */}
-                <div className="mt-auto pt-5 flex justify-between items-center">
+                <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
                   <span
                     className={`px-4 py-1.5 rounded-full text-xs font-medium ${
                       event.isPaid
@@ -96,10 +102,13 @@ export default function UpcomingEvents() {
                         : "bg-emerald-100 text-emerald-600"
                     }`}
                   >
-                    {event.isPaid ? `Paid – $${event.eventFee}` : "Free Event"}
+                    {event.isPaid
+                      ? `Paid – ${event.eventFee} BDT`
+                      : "Free Event"}
                   </span>
+
                   <Link to={`/eventDetails/${event._id}`}>
-                    <button className="px-4 py-2 rounded-xl btn-club text-white font-medium shadow hover:shadow-lg hover:opacity-90 transition">
+                    <button className="px-4 py-2 rounded-xl btn-club text-white text-sm font-medium shadow hover:opacity-90 transition">
                       View Details
                     </button>
                   </Link>
