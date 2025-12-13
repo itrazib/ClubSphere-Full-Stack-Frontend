@@ -46,13 +46,12 @@ export default function EventDetails() {
       const res = await axiosSecure.get(
         `/events/isJoined?eventId=${id}&userEmail=${user?.email}`
       );
-      console.log(res.data)
+      
       return res.data; // "joined" | "not"
     },
     enabled: !!id && !!user?.email,
   });
 
-  console.log(isJoined);
 
   // -----------------------------
   // 🌟 Join Event Mutation
