@@ -7,6 +7,7 @@ import Topbar from "../components/Topbar";
 export default function DashboardLayout() {
   return (
     <div className="bg-white" style={{ display: "flex", minHeight: "100vh" }}>
+      <title>Dashboard</title>
       <Sidebar />
 
       <div style={{ flex: 1 }}>

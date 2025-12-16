@@ -54,7 +54,7 @@ export default function EventDetails() {
 
 
   // -----------------------------
-  // 🌟 Join Event Mutation
+  //  Join Event Mutation
   // -----------------------------
   const joinEventMutation = useMutation({
     mutationFn: async () => {
@@ -84,6 +84,7 @@ export default function EventDetails() {
   return (
     <div className="max-w-7xl mx-auto p-6 mt-20 ">
       {/* HEADER */}
+      <title>{event.title}</title>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

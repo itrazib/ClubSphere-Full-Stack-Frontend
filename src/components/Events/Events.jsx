@@ -59,6 +59,7 @@ const Events = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 mt-30 relative z-20">
+      <title>All Events</title>
       {/* ===== Header ===== */}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-gradient">

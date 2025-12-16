@@ -59,6 +59,7 @@ export default function Clubs() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 mt-30">
+      <title>Clubs</title>
 
       {/* ================= PAGE HEADER ================= */}
       <div className="text-center mb-14">

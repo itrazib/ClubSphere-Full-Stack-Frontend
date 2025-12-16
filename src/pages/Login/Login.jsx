@@ -23,6 +23,7 @@ export default function Login() {
 
     try {
       const { user } = await signIn(email, password);
+      console.log(user)
 
       await saveOrUpdateUser({
         name: user?.displayName,
@@ -57,6 +58,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center  p-4">
+      <title>Login</title>
       <motion.div
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
