@@ -45,9 +45,9 @@ export default function Navbar() {
               <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-xl 
               opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto 
               transition p-2">
-                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
+                {/* <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
                   Profile
-                </Link>
+                </Link> */}
                 <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
                   Dashboard
                 </Link>
