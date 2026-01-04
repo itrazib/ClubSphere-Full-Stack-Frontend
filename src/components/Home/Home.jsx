@@ -1,3 +1,6 @@
+import Contact from '../../pages/contact/Contact';
+import PrivacyPolicy from '../../pages/privacy/PrivacyPolicy';
+import Terms from '../../pages/terms/Terms';
 import HeroSection from './HeroSection';
 import HowItWorks from './HowItWorks';
 import PopularCategories from './PopularCategories';
@@ -11,6 +14,9 @@ const Home = () => {
            <UpcommingEvents></UpcommingEvents>
            <HowItWorks/>
            <PopularCategories/>
+           <Contact></Contact>
+           <PrivacyPolicy></PrivacyPolicy>
+           <Terms></Terms>
         </div>
     );
 };
