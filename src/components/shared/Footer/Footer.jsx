@@ -23,7 +23,7 @@ export default function Footer() {
             Contact
           </h2>
           <p className="text-sm">Email: support@clubsphere.com</p>
-          <p className="text-sm">Phone: +123 456 789</p>
+          <p className="text-sm">Phone: +8801316-959094</p>
           <p className="text-sm">Location: University Campus</p>
         </div>
 
@@ -35,7 +35,7 @@ export default function Footer() {
           <div className="flex items-center gap-5 mt-2">
 
             <a
-              href="https://github.com"
+              href="https://github.com/itrazib"
               target="_blank"
               className="hover:text-white transition"
             >
@@ -43,7 +43,7 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/in/das-razib/"
               target="_blank"
               className="hover:text-white transition"
             >
