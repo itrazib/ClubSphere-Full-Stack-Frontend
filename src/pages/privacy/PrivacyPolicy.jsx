@@ -2,36 +2,52 @@ import React from "react";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
+    <section className="bg-gray-50 min-h-screen py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-10">
+          <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
 
-      <p className="text-gray-600 mb-4">
-        At ClubSphere, we respect your privacy and are committed to protecting
-        your personal information.
-      </p>
+          <p className="text-gray-600 mb-6">
+            ClubSphere values your privacy and is committed to protecting your
+            personal data. This policy explains how we collect, use, and
+            safeguard your information.
+          </p>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">
-        Information We Collect
-      </h2>
-      <p className="text-gray-600 mb-4">
-        We may collect your name, email address, and other relevant information
-        when you register or use our services.
-      </p>
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                Information We Collect
+              </h2>
+              <p className="text-gray-600">
+                We collect personal information such as name, email address,
+                and account details when you register or interact with our
+                platform.
+              </p>
+            </div>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">
-        How We Use Your Information
-      </h2>
-      <p className="text-gray-600 mb-4">
-        Your information is used to provide services, improve user experience,
-        and communicate important updates.
-      </p>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                Use of Information
+              </h2>
+              <p className="text-gray-600">
+                Your data helps us provide better services, enhance platform
+                functionality, and communicate important updates.
+              </p>
+            </div>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">Data Security</h2>
-      <p className="text-gray-600">
-        We take appropriate security measures to protect your data from
-        unauthorized access.
-      </p>
-    </div>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                Data Protection
+              </h2>
+              <p className="text-gray-600">
+                We implement industry-standard security measures to protect
+                your information from unauthorized access.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

@@ -2,36 +2,50 @@ import React from "react";
 
 const Terms = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
+    <section className="bg-gray-50 min-h-screen py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-10">
+          <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
 
-      <p className="text-gray-600 mb-4">
-        By accessing and using ClubSphere, you agree to the following terms and
-        conditions.
-      </p>
+          <p className="text-gray-600 mb-6">
+            By using ClubSphere, you agree to comply with the following terms
+            and conditions. Please read them carefully.
+          </p>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">User Responsibilities</h2>
-      <p className="text-gray-600 mb-4">
-        Users must provide accurate information and use the platform in a lawful
-        manner.
-      </p>
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                User Responsibilities
+              </h2>
+              <p className="text-gray-600">
+                Users are responsible for maintaining account security and
+                providing accurate information.
+              </p>
+            </div>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">
-        Account Termination
-      </h2>
-      <p className="text-gray-600 mb-4">
-        ClubSphere reserves the right to suspend or terminate accounts that
-        violate our policies.
-      </p>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                Account Suspension
+              </h2>
+              <p className="text-gray-600">
+                ClubSphere may suspend or terminate accounts that violate
+                platform rules or misuse services.
+              </p>
+            </div>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">
-        Changes to Terms
-      </h2>
-      <p className="text-gray-600">
-        We may update these terms at any time. Continued use of the platform
-        means acceptance of the updated terms.
-      </p>
-    </div>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">
+                Policy Updates
+              </h2>
+              <p className="text-gray-600">
+                These terms may be updated periodically. Continued use of the
+                platform indicates acceptance of revised terms.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
