@@ -15,8 +15,7 @@ const Home = () => {
            <HowItWorks/>
            <PopularCategories/>
            <Contact></Contact>
-           <PrivacyPolicy></PrivacyPolicy>
-           <Terms></Terms>
+           
         </div>
     );
 };

@@ -24,6 +24,8 @@ import Profile from "../components/Profile/Profile";
 import MemberClubs from "../components/Member/MemberClubs";
 import MyEvents from "../components/Member/MyEvents";
 import PaymentHistory from "../components/Member/PaymentHistory";
+import PrivacyPolicy from "../pages/privacy/PrivacyPolicy";
+import Terms from "../pages/terms/Terms";
 
 
 const router = createBrowserRouter([
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
             {
                 path:'/eventDetails/:id',
                 element:<EventDetails></EventDetails>
+            },
+            {
+                path:'/privacy-policy',
+                element:<PrivacyPolicy></PrivacyPolicy>
+            },
+            {
+                path:'/terms',
+                element:<Terms></Terms>
             }
         ]
 

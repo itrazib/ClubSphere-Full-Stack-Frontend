@@ -4,10 +4,10 @@ const Contact = () => {
   return (
     <section className="bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-20">
+      <div className=" py-20">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-3">Contact ClubSphere</h1>
-          <p className="text-lg text-blue-100">
+          <h1 className="text-4xl font-bold mb-3 text-gradient">Contact ClubSphere</h1>
+          <p className="text-lg text-gray-400">
             We’re here to help you manage and grow your community
           </p>
         </div>
@@ -23,7 +23,7 @@ const Contact = () => {
 
             <div className="space-y-4 text-gray-700">
               <p>📧 support@clubsphere.com</p>
-              <p>📞 +880 1234 567890</p>
+              <p>📞 +880 1316 959094</p>
               <p>📍 Dhaka, Bangladesh</p>
             </div>
 
